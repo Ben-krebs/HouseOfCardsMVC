@@ -26,5 +26,12 @@ namespace HouseOfCardsMVC.Controllers
 
             return View();
         }
+
+        public ActionResult Join()
+        {
+            ViewBag.Message = "Join a game.";
+
+            return View();
+        }
     }
 }

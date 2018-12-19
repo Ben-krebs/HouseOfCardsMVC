@@ -22,3 +22,18 @@ select,
 textarea {
     max-width: 280px;
 }
+
+
+.Padding-Box{
+    padding:12px;
+}
+
+.Margin-Box {
+    margin: 12px;
+}
+
+.Empty-Input {
+   border-color: yellow;
+   border-style: solid;
+   border-width: 1px;
+}

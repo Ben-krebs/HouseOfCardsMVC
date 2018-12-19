@@ -1,0 +1,25 @@
+﻿@using HouseOfCardsMVC.Models
+@model PlayerModel
+@{
+    Layout = "~/Views/Shared/_Layout-Game.cshtml";
+    ViewBag.Title = "Waiting to start";
+}
+
+<div class="Padding-Box">
+    <h5>Waiting for more players?</h5>
+
+    <div id="players">
+
+    </div>
+    <p>Send them the room code: <b>@Model.Game_Id</b></p>
+
+    <button onclick="StartGame_Button()">Start Game</button>
+</div>
+
+
+
+<script>
+    $(function () {
+        JoinGameAlert();
+    })
+</script>
