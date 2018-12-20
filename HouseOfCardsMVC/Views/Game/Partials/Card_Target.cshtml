@@ -1,0 +1,29 @@
+﻿@using HouseOfCardsMVC.Models
+@model GameModel
+
+<div class="container body-content Margin-Box">
+
+    <div class="Card" id="SelectTarget_Heading">
+            @* Populates from the Card that was chosen *@
+    </div>
+
+    <div class="row">
+        @foreach (var Player in Model.Players)
+        {
+            <div class="col-sm-6 Margin-Bottom">
+                <div onclick="$('.active').removeClass('active'); $(this).addClass('active'); GlobalSelectedTarget ='@Player.Id'" class="btn btn-primary FullWidth">@Player.Name</div>
+            </div>
+        }
+    </div>
+
+    <div class="text-center">
+        <button class="btn btn-default" onclick="HidePartialDiv()">BACK</button>
+        <button class="btn btn-success" onclick="ConfirmTarget_Button()">CONFIRM</button>
+    </div>
+</div>
+<script>
+    $('#SelectTarget_Heading').html(CardHeading);
+    if (DirtyCard) {
+        $('#SelectTarget_Heading').addClass('Dirty')
+    }
+</script>

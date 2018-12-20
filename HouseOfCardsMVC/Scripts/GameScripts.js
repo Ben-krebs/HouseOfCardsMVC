@@ -16,11 +16,19 @@ $(function () {
     };
 
     hub.client.alertOnJoin = function (name) {
-        $('#players').append("<p>" + name + "</p>");
+        $('#players').append("<h2>" + name + "</h2>");
     };
 
     hub.client.alertOnLeave = function (name) {
-        $('#players').append("<p>" + name + "</p>");
+        $('#players').append("<h2>" + name + "</h2>");
+    };  
+
+    hub.client.alertOnAccuse = function (name, id) {
+        $('#Accuse_Ids_Div').append("<p class='Accuse-" + id + "'>" + name + "</p>");
+    };
+
+    hub.client.alertOnAcquit = function (id) {
+        $('#Accuse_Ids_Div .Accuse-' + id).remove();
     };  
 
     // Start the connection.  
@@ -31,17 +39,30 @@ $(function () {
     });
 });
 
+function AccuseAlert(name, id) {
+    hub.server.alertAccuse(name, id);
+}
+
+function AcquitAlert(id) {
+    hub.server.alertAcquit(id);
+}
 
 function JoinGameAlert() {
     hub.server.joinGroup(GlobalGameId, $.connection.hub.id, GlobalPlayerName);
 }
 
 function LeaveGame_Button() {
-    hub.server.leaveGroup(GlobalGameId, $.connection.hub.id, GlobalPlayerName);
-    window.location.href = '/Game/';
+    hub.server.leaveGroup(GlobalGameId, GlobalPlayerId);
+    $.ajax({
+        url: '/Home/SaveSession',
+        type: "POST",
+        datatype: JSON,
+        data: { Key: "Game_Id", val: "NULL" },
+        success: function () {
+            window.location.href = '/Game/';
+        }
+    });
 }
-
-
 
 // Home page, used to create a new game
 function CreateGame_Button() {
@@ -105,23 +126,95 @@ function StartGame_Button() {
     });
 }
 
-function SchemeComplete_Button() {
+function ConfirmTarget_Button() {
     $.ajax({
         url: '/Game/ReadyHandler',
         type: "POST",
         datatype: JSON,
-        data: { Game_Id: GlobalGameId, Player_Id: GlobalPlayerId, Phase: 1, Selected_Card_Id: $('#card_id').val(), Selected_Target_Id: $('#target_id').val() },
+        data: { Game_Id: GlobalGameId, Player_Id: GlobalPlayerId, Phase: GlobalPhaseId, Selected_Card_Id: GlobalSelectedCard, Selected_Target_Id: GlobalSelectedTarget },
         success: function (data) {
             if (data === '0') {
                 hub.server.redirect('/Game/');
             }
             else {
-                $('#Pending-Players-Scheme').show();
-                $('#Pending-Players-Scheme-Count').html(data);
+                $('#Ready_Count').html(data);
+                ToggleBody('Ready_Body');
             }        
         }
     });
 }
+
+var CardHeading = '';
+var DirtyCard = false;
+// select a particular card for this round
+function PlayCard_Button(id, target) {
+    GlobalSelectedCard = id;
+    GlobalSelectedTarget = null;
+
+    if (target === 'Other') {
+        CardHeading = $('#SelectCard_Heading').html();
+        DirtyCard = $('#SelectCard_Heading').closest('.Card').hasClass('Dirty');
+        Open_Partial_Div('Game', 'Game/Partials/Card_Target', GlobalGameId);
+    }
+    else {       
+        ConfirmTarget_Button();
+    }
+}
+
+// Accuse page, no vote reached
+function NoVote_Button() {
+
+    $.ajax({
+        url: '/Game/EndRoundHandler',
+        type: "POST",
+        datatype: JSON,
+        data: { Player_Name: $('#PlayerName_Input').val() },
+        success: function () {
+            window.location.href = '/Game/';
+        }
+    });
+}
+
+// Accuse page vote confirmed
+function ConfirmVote_Button(count) {
+    // First validate the input
+    var elms = $('#Player_Votes .active');
+
+    if ($(elms).length !== count) {
+        return;
+    }
+    var vote_ids = "";
+    $.each(elms, function () {
+        vote_ids += "," + $(this).data('id');
+    });
+
+    $.ajax({
+        url: '/Game/EndRoundHandler',
+        type: "POST",
+        datatype: JSON,
+        data: { Game_Id: GlobalGameId, Vote_Ids: vote_ids },
+        success: function (data) {
+            Open_Partial_Div('String', 'Game/Partials/Vote_Result', data)
+
+            setTimeout(function () {
+                window.location.href = '/Game/';
+            }, 6000);
+       
+        }
+    });
+}
+
+function Accuse_Button(elm) {
+    if ($(elm).hasClass('active')) {
+        AccuseAlert($(elm).data('name'), $(elm).data('id'));
+    }
+    else {
+        AcquitAlert($(elm).data('id'));
+    }
+    $($(elm).toggleClass('active'));
+}
+
+//////// Load new divs
 
 function Load_Game_Partial(partial, div) {
     $.ajax({
@@ -130,7 +223,7 @@ function Load_Game_Partial(partial, div) {
         datatype: JSON,
         data: { Game_Id: GlobalGameId, Partial: partial },
         success: function (data) {
-            $(elm).html(data);
+            $(div).html(data);
         }
     });
 }
@@ -142,7 +235,7 @@ function Load_Player_Partial(partial, div) {
         datatype: JSON,
         data: { Partial: partial },
         success: function (data) {
-            $(elm).html(data);
+            $(div).html(data);
         }
     });
 }
@@ -154,7 +247,70 @@ function Load_Card_Partial(partial, div, id) {
         datatype: JSON,
         data: { Card_Id: id, Partial: partial },
         success: function (data) {
-            $(elm).html(data);
+            $(div).html(data);
         }
     });
 }
+
+function Load_String_Partial(partial, div, id) {
+    $.ajax({
+        url: '/Home/Partial_String',
+        type: "POST",
+        datatype: JSON,
+        data: { Data: id, Partial: partial },
+        success: function (data) {
+            $(div).html(data);
+        }
+    });
+}
+
+function Open_Partial_Div(type, partial, id) {
+    var div = '#Partial_Body';
+    switch (type) {
+        case "Card":
+            Load_Card_Partial(partial, div, id);
+            break;
+        case "Player":
+            Load_Player_Partial(partial, div);
+            break;
+        case "Game":
+            Load_Game_Partial(partial, div);
+            break;
+        case "String":
+            Load_String_Partial(partial, div, id);
+            break;
+    }
+    ShowPartialDiv();
+}
+
+
+function HidePartialDiv() {
+    $('#Game_Body').fadeIn(200);
+    $('#Partial_Body').hide();
+}
+
+function ShowPartialDiv() {
+    $('#Game_Body').hide();
+    $('#Partial_Body').fadeIn(200);
+}
+
+function ToggleBody(id) {
+    $('.Body-Div').hide();
+    $('#' + id).fadeIn(200);
+}
+
+//function Open_Partial_Modal(type, partial, id) {
+//    var div = '#PartialModal_Content';
+//    switch (type) {
+//        case "Card":
+//            Load_Card_Partial(partial, div, id);
+//            break;
+//        case "Player":
+//            Load_Player_Partial(partial, div);
+//            break;
+//        case "Game":
+//            Load_Game_Partial(partial, div);
+//            break;
+//    }
+//    $('#PartialModal').modal();
+//}

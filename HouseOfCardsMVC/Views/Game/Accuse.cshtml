@@ -1,9 +1,13 @@
-﻿
+﻿@using HouseOfCardsMVC.Models
+@model PlayerModel
 @{
     Layout = "~/Views/Shared/_Layout-Game.cshtml";
     ViewBag.Title = "Accuse";
     bool Messages = Model.Messages.Any();
 }
+<script>
+    GlobalPhaseId = 3;
+</script>
 
 <div id="Accuse_Messages_Div" class="Padding-Box" @(Messages ? "" : "hidden")>
     <h2>Messages</h2>
@@ -11,24 +15,42 @@
     {
         <label>@message</label>
     }
-    <button onclick="$('#Accuse_Messages_Div').hide(); $('.Game-Body').show();">Close</button>
+
+    <button class="btn btn-default" onclick="$('#Accuse_Messages_Div').hide(); $('.Game-Body').show();">Close</button>
+
 </div>
 
+@if (Model.Voting)
+{
 <div class="Game-Body Padding-Box" @(Messages ? "hidden" : "")>
-    <div class="row">
-        <div class="col-sm-6">
-            <p>Player 1</p>
-        </div>
-        <div class="col-sm-6">
-            <p>Player 2</p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6">
-            <p>Player 3</p>
-        </div>
-        <div class="col-sm-6">
-            <p>Player 4</p>
-        </div>
+    <div class="row" id="Player_Votes">
+        @foreach (var Player in Model.Game.Players)
+        {
+            <div class="col-sm-6">
+                <div onclick="Accuse_Button(this)" data-name="@Player.Name" data-id="@Player.Id" class="btn btn-primary Margin-Bottom FullWidth">@Player.Name</div>
+            </div>
+        }
+
+
+    </div>  
+    <div class="text-center">
+        <button class="btn btn-default" onclick="NoVote_Button()">NO VOTE</button>
+        <button class="btn btn-success" onclick="ConfirmVote_Button()">CONFIRM</button>
     </div>
 </div>
+}
+else
+{
+    <div class="Game-Body Padding-Box" @(Messages ? "hidden" : "")>
+
+        <div class="Padding-Box">
+            <h3>Your group has selected:</h3>
+        </div>
+
+        <div id="Accuse_Ids_Div">
+
+
+
+        </div>
+    </div>
+}

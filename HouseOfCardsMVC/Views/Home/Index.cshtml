@@ -7,17 +7,21 @@
     <p class="lead">Engage in dirty politics to win the election of your dreams.</p>
 </div>
 
-<div class="row">
+<div>
     <h2>Play a new Game</h2>
+    <div class="Margin-Bottom">
+        <label>Player Name</label>
+        <input class="form-control" id="PlayerName_Input" />
+    </div>
+    <div class="Margin-Bottom">
+        <label>Room Code</label>
+        <input class="form-control" id="RoomCode_Input" />
+    </div>
+    <div class="Margin-Bottom">
+        <button class="btn btn-default" onclick="JoinGame_Button()">Join Game</button>
+        <button class="btn btn-default" onclick="CreateGame_Button()">Create Game</button>
+    </div>
 
-    <label>Player Name</label>
-    <input id="PlayerName_Input"/>
-
-    <label>Room Code</label>
-    <input id="RoomCode_Input" />
-
-    <button onclick="JoinGame_Button()">Join Game</button>
-    <button onclick="CreateGame_Button()">Create Game</button>
-    <br/>
+    <br />
     <div hidden id="InvalidCode_Div" class="bg-danger"><label>Invalid code, or the game has already started</label></div>
 </div>

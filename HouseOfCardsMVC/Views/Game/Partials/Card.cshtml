@@ -1,0 +1,29 @@
+﻿@using HouseOfCardsMVC.Models
+@model Card
+
+
+<div class="Card @(Model.Dirty && (Model.Phase == 1) ? "Dirty" : "Clean")" onclick="Open_Partial_Div('Card', 'Game/Partials/Card_Select', '@Model.Id')">
+    <h2 class="Margin-ZT">
+        @Model.Name
+        @if (Model.Phase == 1)
+        {
+            if (Model.Dirty)
+            {
+                <span class="pull-right badge badge-danger">ILLEGAL</span>
+            }
+            else
+            {
+                <span class="pull-right badge badge-success">LEGAL</span>
+            }
+        }
+    </h2>
+    <p>@Model.Description</p>
+    @if (Model.Phase == 1)
+    {
+    <div class="flex">
+        <div class="Padding-Box text-success Margin-Right bg-success Border-r4">@Model.Score</div>
+        <div class="Padding-Box text-primary Margin-Right bg-primary Border-r4">@Model.Defense</div>
+        <div class="Padding-Box text-danger bg-danger Border-r4">@Model.Attack</div>
+    </div>
+    }
+</div>

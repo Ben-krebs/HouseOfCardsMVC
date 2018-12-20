@@ -1,0 +1,33 @@
+﻿@model string
+
+<div class="container body-content">
+
+    <div class="Padding-Box">
+        <h3>Your group has selected:</h3>
+    </div>
+
+    @if (Model == "No Vote")
+    {
+        <div class="Padding-Box ">
+            <h1>No Vote</h1>
+        </div>
+    }
+    else if (Model == "Correct")
+    {
+        <div class="Padding-Box bg-success">
+            <h1>Correctly</h1>
+        </div>
+    }
+    else if (Model == "Partial")
+    {
+        <div class="Padding-Box bg-warning">
+            <h3>Some Correct</h3>
+        </div>
+    }
+    else
+    {
+        <div class="Padding-Box bg-danger">
+            <h3>Wrongly</h3>
+        </div>
+    }
+</div>
