@@ -52,7 +52,8 @@ namespace HouseOfCardsMVC.Models
         public string Name { get; set; }
         public bool Ready { get; set; }
         public string Dirt { get; set; }
-        public string Defense { get; set; }
+        public int HistoricDirt { get; set; }
+        public string DefenseType { get; set; }
         public bool Baiting { get; set; }
         public bool Voting { get; set; }
 
