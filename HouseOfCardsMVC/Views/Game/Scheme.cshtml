@@ -22,13 +22,13 @@
 
 <div class="Game-Body Padding-Box" @(Messages ? "hidden" : "")>
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-lg-6">
             @{
                 Card Card1 = Constants.Cards.GetCard(Model.Card_Ids[0]);
                 @Html.Partial("~/Views/Game/Partials/Card.cshtml", Card1);
             }
         </div>
-        <div class="col-sm-6">
+        <div class="col-lg-6">
             @{
                 var Card2 = Constants.Cards.GetCard(Model.Card_Ids[1]);
                 @Html.Partial("~/Views/Game/Partials/Card.cshtml", Card2);
@@ -36,13 +36,13 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-lg-6">
             @{
                 var Card3 = Constants.Cards.GetCard(Model.Card_Ids[2]);
                 @Html.Partial("~/Views/Game/Partials/Card.cshtml", Card3);
             }
         </div>
-        <div class="col-sm-6">
+        <div class="col-lg-6">
             @{
                 var Card4 = Constants.Cards.GetCard(Model.Card_Ids[3]);
                 @Html.Partial("~/Views/Game/Partials/Card.cshtml", Card4);
