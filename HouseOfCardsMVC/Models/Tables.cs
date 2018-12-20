@@ -39,6 +39,8 @@ namespace HouseOfCardsMVC.Models
             {
                 return new List<Card>
                 {
+                    new Card { Id = -1,  Category = "", Description = "Someone intercepted your card, you have one less option to play this round ", Name = "Blank", Dirty = false, Image = "", Phase = 2, Score = 0, Target = List_CardTargets.Self },
+
                     new Card { Id = 0,  Category = "", Description = "a", Name = "Collude with the Russians", Dirty = true, Image = "", Phase = 1, Score = 0, Target = List_CardTargets.Self },
                     new Card { Id = 1,  Category = "", Description = "q", Name = "Hack into another players emails", Dirty = true, Image = "", Phase = 1, Score = 0, Target = List_CardTargets.Other },
                     new Card { Id = 2,  Category = "", Description = "w", Name = "Evade tax", Dirty = true, Image = "", Phase = 1, Score = 0, Target = List_CardTargets.Self },
