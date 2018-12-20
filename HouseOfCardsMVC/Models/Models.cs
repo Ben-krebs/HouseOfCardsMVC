@@ -106,4 +106,23 @@ namespace HouseOfCardsMVC.Models
     }
 
 
+    public class MessageViewModel
+    {
+        public MessageViewModel()
+        {
+            this.Buttons = new HashSet<ButtonViewModel>();
+        }
+
+        public string Title { get; set; }
+        public string Body { get; set; }
+
+        public HashSet<ButtonViewModel> Buttons {get;set;}
+    }
+
+    public class ButtonViewModel
+    {
+        public string Title { get; set; }
+        public string Action { get; set; }
+    }
+
 }

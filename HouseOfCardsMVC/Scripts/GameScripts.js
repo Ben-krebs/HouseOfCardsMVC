@@ -112,7 +112,7 @@ function SchemeComplete_Button() {
         datatype: JSON,
         data: { Game_Id: GlobalGameId, Player_Id: GlobalPlayerId, Phase: 1, Selected_Card_Id: $('#card_id').val(), Selected_Target_Id: $('#target_id').val() },
         success: function (data) {
-            if (data === 0) {
+            if (data === '0') {
                 hub.server.redirect('/Game/');
             }
             else {

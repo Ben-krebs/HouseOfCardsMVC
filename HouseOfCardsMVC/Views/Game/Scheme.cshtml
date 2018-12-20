@@ -18,17 +18,15 @@
 <div class="Game-Body Padding-Box" @(Messages ? "hidden" : "")>
     <div class="row">
         <div class="col-sm-6">
-            <p>Card 1</p>
             @{
                 var Card1 = Constants.Cards.GetCard(Model.Card_Ids[0]);
-                <text>
+                <div>
                     <h5>@Card1.Name</h5>
                     <p>@Card1.Description</p>
-                </text>
+                </div>  
             }
         </div>
         <div class="col-sm-6">
-            <p>Card 2</p>
             @{
                 var Card2 = Constants.Cards.GetCard(Model.Card_Ids[1]);
                 <text>
@@ -40,7 +38,6 @@
     </div>
     <div class="row">
         <div class="col-sm-6">
-            <p>Card 3</p>
             @{
                 var Card3 = Constants.Cards.GetCard(Model.Card_Ids[2]);
                 <text>
@@ -50,7 +47,6 @@
             }
         </div>
         <div class="col-sm-6">
-            <p>Card 4</p>
             @{
                 var Card4 = Constants.Cards.GetCard(Model.Card_Ids[3]);
                 <text>

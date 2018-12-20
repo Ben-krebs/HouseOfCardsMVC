@@ -11,6 +11,7 @@
     <h2>Messages</h2>
     @foreach(string message in Model.Messages)
     {
+        @*@Html.Partial("/Views/Shared/_MessagePartial", message);*@
         <label>@message</label>
     }
     <button onclick="$('#Investigate_Messages_Div').hide(); $('.Game-Body').show();">Close</button>
