@@ -5,15 +5,14 @@ using System.Web;
 using Microsoft.AspNet.SignalR;
 using System.Threading.Tasks;
 
-namespace HouseOfCardsMVC.Hubs
+namespace HouseOfCardsMVC
 {
     public class GameHub : Hub
     {
         public void Redirect(string url)
         {
             // Call the redirect method for all clients
-            Clients.Others.redirectToUrl(url);
-            Clients.Caller.redirectToUrl(url);
+            Clients.All.redirectToUrl(url);
         }
 
         public void AlertJoin(string Name)
@@ -30,19 +29,20 @@ namespace HouseOfCardsMVC.Hubs
 
         public async Task JoinGroup(string groupName, string ConnectionId, string PlayerName)
         {
+            //var game = HttpContext.Current.Application["Game-" + groupName] as Models.GameModel;
+            //foreach(var id in game.Player_Ids.SplitAndTrim(','))
+            //{
+            //    var player = HttpContext.Current.Application["Player-" + id] as Models.PlayerModel;
+            //    await Clients.All.AlertOnJoin(Context.ConnectionId + ": " + PlayerName + " added to group");
+            //}
             await Groups.Add(ConnectionId, groupName);
-            await Clients.Group(groupName).AlertOnJoin(Context.ConnectionId + ": " + PlayerName + " added to group");
+            await Clients.Group(groupName).AlertOnJoin(PlayerName + " has joined");
         }
 
         public async Task LeaveGroup(string groupName)
         {
             await Groups.Remove(Context.ConnectionId, groupName);
-            await Clients.Group(groupName).AlertOnLeave(Context.ConnectionId + " removed from group");
+            await Clients.Group(groupName).AlertOnLeave(Context.ConnectionId + " has left");
         }
-    }
-
-    public static class UserHandler
-    {
-        public static HashSet<string> ConnectedIds = new HashSet<string>();
     }
 }
