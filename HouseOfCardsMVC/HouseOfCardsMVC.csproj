@@ -218,6 +218,7 @@
     <Content Include="Views\Shared\_MessagePartial.cshtml" />
     <Content Include="Views\Game\Partials\Card_Select.cshtml" />
     <Content Include="Views\Game\Partials\Card_Target.cshtml" />
+    <Content Include="Views\Game\Partials\Card.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
