@@ -10,7 +10,7 @@ namespace HouseOfCardsMVC.Models
     {
         public GameModel()
         {
-            this.Votes = new HashSet<VoteModel>();
+           // this.Votes = new HashSet<VoteModel>();
             this.Players = new HashSet<PlayerModel>();
             this.Active_Card_Ids = new HashSet<int>();
         }
@@ -20,6 +20,7 @@ namespace HouseOfCardsMVC.Models
         public int Phase { get; set; }
         public DateTime Started { get; set; }
         public string Player_Ids { get; set; }
+        public string Vote_Ids { get; set; }
         public string Event_Ids { get; set; }
         public string Historic_Event_Ids { get; set; } // Cool
         public int Round { get; set; }
@@ -27,7 +28,7 @@ namespace HouseOfCardsMVC.Models
         public HashSet<int> Active_Card_Ids { get; set; }
         // Collection of players found via their Id
         public HashSet<PlayerModel> Players { get; set; }
-        public HashSet<VoteModel> Votes { get; set; }
+       // public HashSet<VoteModel> Votes { get; set; }
 
         public void PopulatePlayers(HttpContextBase Context)
         {

@@ -32,7 +32,7 @@ namespace HouseOfCardsMVC.Models
             Player.Dirt = null;
 
             //Clear any old messages
-            player.Messages.Clear();
+            Player.Messages.Clear();
             return Player;
         }
 

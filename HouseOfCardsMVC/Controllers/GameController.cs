@@ -155,15 +155,12 @@ namespace HouseOfCardsMVC.Controllers
             var game = HttpContext.Application["Game-" + Game_Id] as GameModel;
             PhaseMethods.EndRound(game, HttpContext);
 
-            var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<GameHub>().Clients.All;
-            hubContext.Redirect("/Game/");
+            //var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<GameHub>().Clients.All;
+            //hubContext.Redirect("/Game/");
         }
 
 
-        public bool VoteHandler(int Game_Id, string Target_Id)
-        {
 
-        }
 
         /// <summary>
         /// When a player confirms they are ready to proceed with the phase this fires, it checks if there are any other players we are waiting on, if not it proceeds with the round

@@ -233,6 +233,14 @@ namespace HouseOfCardsMVC.Models
             // Finally add the new scores to each player
             foreach (var player in players)
             {
+                if(player.Dirty && (Game.Vote_Ids ?? "").Contains(player.Id))
+                {
+                    player.PendingScore -= 600;
+                }
+                else
+                {
+
+                }
                 player.Score += player.PendingScore;
                 Context.Application["Player-" + player.Id] = player;
             }
