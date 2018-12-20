@@ -7,21 +7,6 @@ namespace HouseOfCardsMVC.Models
 {
     public class Constants
     {
-        public static class CacheKeys
-        {
-            public static string Entry { get { return "_Entry"; } }
-            public static string CallbackEntry { get { return "_Callback"; } }
-            public static string CallbackMessage { get { return "_CallbackMessage"; } }
-            public static string Parent { get { return "_Parent"; } }
-            public static string Child { get { return "_Child"; } }
-            public static string DependentMessage { get { return "_DependentMessage"; } }
-            public static string DependentCTS { get { return "_DependentCTS"; } }
-            public static string Ticks { get { return "_Ticks"; } }
-            public static string CancelMsg { get { return "_CancelMsg"; } }
-            public static string CancelTokenSource { get { return "_CancelTokenSource"; } }
-        }
-
-
         public class Cards
         {
             public static readonly Card[] Phase1 = CardTypes.Where(a => a.Phase == 1).ToArray();
@@ -39,6 +24,8 @@ namespace HouseOfCardsMVC.Models
             {
                 return new List<Card>
                 {
+                    new Card { Id = -1,  Category = "", Description = "Someone intercepted your card, you have one less option to play this round ", Name = "Blank", Dirty = false, Image = "", Phase = 2, Score = 0, Target = List_CardTargets.Self },
+
                     new Card { Id = 0,  Category = "", Description = "a", Name = "Collude with the Russians", Dirty = true, Image = "", Phase = 1, Score = 0, Target = List_CardTargets.Self },
                     new Card { Id = 1,  Category = "", Description = "q", Name = "Hack into another players emails", Dirty = true, Image = "", Phase = 1, Score = 0, Target = List_CardTargets.Other },
                     new Card { Id = 2,  Category = "", Description = "w", Name = "Evade tax", Dirty = true, Image = "", Phase = 1, Score = 0, Target = List_CardTargets.Self },
