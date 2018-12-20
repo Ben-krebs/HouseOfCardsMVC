@@ -16,17 +16,30 @@ namespace HouseOfCardsMVC.Models
         public static void BeginPhase1(GameModel Game, HttpContextBase Context)
         {
             string[] player_Ids = Game.Player_Ids.SplitAndTrim(',');
-            foreach (string id in player_Ids)
+            PlayerModel[] players = new PlayerModel[player_Ids.Length];
+            HashSet<string> scores = new HashSet<string>();
+            scores.Add("Round " + Game.Round);
+            for (int i = 0; i < player_Ids.Length; i++)
             {
-                var player = Context.Application["Player-" + id] as PlayerModel;
+                players[i] = Context.Application["Player-" + player_Ids[i]] as PlayerModel;
+                scores.Add(players[i].Name + ": " + players[i].Score);
+            }
 
+            // Then calculate the card actions
+            foreach (var player in players)
+            {
                 // Clear the player
                 PlayerMethods.ClearPlayer(player);
 
-                player.Card_Ids = GenerateHand(1);
-                Context.Application["Player-" + id] = player;   
+                // Add the current scores
+                player.Messages = scores;
+
+                player.Card_Ids = GenerateHand(1, Game.Random);
+                Context.Application["Player-" + player.Id] = player;
             }
+
             Game.Phase = 1;
+            Game.DirtCount = 0;
             Context.Application["Game-" + Game.Id] = Game;
         }
 
@@ -39,7 +52,7 @@ namespace HouseOfCardsMVC.Models
         {
              
             string[] player_Ids = Game.Player_Ids.SplitAndTrim(',');
-            Dictionary<string, int> PendingScores = new Dictionary<string, int>();
+            Dictionary<string, int> PendingAttacks = new Dictionary<string, int>();
             PlayerModel[] players = new PlayerModel[player_Ids.Length];
             int dirtCount = 0;
 
@@ -47,7 +60,7 @@ namespace HouseOfCardsMVC.Models
             for (int i = 0; i < player_Ids.Length; i++)
             {
                 players[i] = Context.Application["Player-" + player_Ids[i]] as PlayerModel;
-                PendingScores.Add(player_Ids[i], 0);
+                PendingAttacks.Add(player_Ids[i], 0);
             }
 
             // Then calculate the card actions
@@ -68,32 +81,44 @@ namespace HouseOfCardsMVC.Models
                     if (card.Target == Constants.List_CardTargets.Other)
                     {
                         // Store the pending action against its target
-                        PendingScores[player.SelectedTarget] += card.Attack;
+                        PendingAttacks[player.SelectedTarget] += card.Attack;
                     }
                     else if (card.Target == Constants.List_CardTargets.Global)
                     {
                         // Store the pending action against its targets
-                        foreach (var score in PendingScores.Where(a => a.Key != player.Id))
+                        foreach (var key in player_Ids.Where(a => a != player.Id))
                         {
-                            PendingScores[score.Key] += card.Attack;
+                            PendingAttacks[key] += card.Attack;
                         }
                     }
                 }
-                //Clear any old messages
-                player.Messages.Clear();
 
-                // Create the new hand for the player
-                player.Card_Ids = GenerateHand(2);          
+                // Clear the player
+                PlayerMethods.ClearPlayer(player, false);
             }
 
             // Finally, apply them and generate the card messages
             foreach (var player in players)
             {
-                player.PendingScore -= PendingScores[player.Id];
+                //Clear any old messages
+                player.Messages.Clear();
+
+                // Create the new hand for the player
+                player.Card_Ids = GenerateHand(2, Game.Random);
+
+                PendingAttacks[player.Id] -= player.PendingDefense;
+                if(PendingAttacks[player.Id] > 0)
+                {
+                    player.PendingScore -= PendingAttacks[player.Id];
+                }
+
+                player.PendingDefense = 0;
+
                 if (dirtCount > 0) { player.Messages.Add(dirtCount + " players have been found to be acting illegally."); }
                 Context.Application["Player-" + player.Id] = player;
             }
             Game.Phase = 2;
+            Game.DirtCount = dirtCount;
             Context.Application["Game-" + Game.Id] = Game;
 
             return dirtCount;
@@ -176,7 +201,7 @@ namespace HouseOfCardsMVC.Models
                                 result = target.Name + (target.Dirty ? " has dirt on them" : " is clean");
                                 break;
                             case "Score":
-                                result = target.Name + " is looking to " + (target.PendingScore >= 0 ? "gain" : "lose") + " points of popularity";
+                                result = target.Name + " is looking to " + (target.PendingScore >= 0 ? "gain " : "lose ") + target.PendingScore + " points of popularity";
                                 break;
                             case "Target":
                                 string attackedPlayer = "an unknown player";
@@ -209,8 +234,12 @@ namespace HouseOfCardsMVC.Models
                 }
                 else
                 {
-                    player.Messages.Add("Anoter player is controlling the vote, discuss as a group and figure out who to accuse of foul play");
+                    player.Messages.Add("Another player is controlling the vote, discuss as a group and figure out who to accuse of foul play");
                 }
+
+                // Clear the player
+                PlayerMethods.ClearPlayer(player, false);
+
                 Context.Application["Player-" + player.Id] = player;
             }
             Game.Phase = 3;
@@ -252,6 +281,7 @@ namespace HouseOfCardsMVC.Models
                 }
             }
 
+            bool gameOver = false;
             // Finally add the new scores to each player
             foreach (var player in players)
             {
@@ -268,22 +298,31 @@ namespace HouseOfCardsMVC.Models
                     player.PendingScore -= (100 * wrongVotes);
                 }
 
+                //Clear any old messages
+                player.Messages.Clear();
+
                 player.Score += player.PendingScore;
+                if(player.Score > 5000)
+                {
+                    gameOver = true;
+                }
+                player.Messages.Add("Your popularity " + (player.PendingScore >= 0 ? "increased by " : "dropped by ") + player.PendingScore + " points in the last round, your current score is " + player.Score);
+    
                 Context.Application["Player-" + player.Id] = player;
             }
 
             Game.Phase = 1;
+            Game.Round += 1;
             Context.Application["Game-" + Game.Id] = Game;
 
 
-            return (String.IsNullOrEmpty(Game.Vote_Ids) ? "No Vote" : (correctVotes == 0 ? "Wrong" : wrongVotes == 0 ? "Correct" : "Partial"));
+            return gameOver ? "Game OVer" : (String.IsNullOrEmpty(Game.Vote_Ids) ? "No Vote" : (correctVotes == 0 ? "Wrong" : wrongVotes == 0 ? "Correct" : "Partial"));
         }
 
-        public static int[] GenerateHand(int Phase)
+        public static int[] GenerateHand(int Phase, Random r)
         {
             //CardModel[] hand = new CardModel[4];
             int[] ids = new int[4];
-            Random r = new Random();
 
             Card[] cards = Phase == 1 ? Constants.Cards.Phase1 : Constants.Cards.Phase2;
 

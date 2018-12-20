@@ -15,6 +15,7 @@ namespace HouseOfCardsMVC.Models
                 Active = false,
                 Phase = 0,
                 Round = 0,
+                Random = new Random()
             };
             return game;
         }

@@ -31,6 +31,7 @@ namespace HouseOfCardsMVC.Controllers
                     case 1: return View("~/Views/Game/Scheme.cshtml", player);
                     case 2: return View("~/Views/Game/Investigate.cshtml", player);
                     case 3: return View("~/Views/Game/Accuse.cshtml", player);
+                    case 4: return View("~/Views/Game/End.cshtml", player);
                 }
             }
             return View();
@@ -46,6 +47,21 @@ namespace HouseOfCardsMVC.Controllers
             {
                 return RedirectToAction("Index");
             }      
+        }
+
+        public ActionResult End()
+        {
+            if (Session["Game_Id"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                GameModel game = HttpContext.Application["Game-" + Session["Game_Id"]] as GameModel;
+                game.Phase = 4;
+                HttpContext.Application["Game-" + Session["Game_Id"]] = game;
+                return RedirectToAction("Index");
+            }
         }
 
         #endregion
@@ -114,40 +130,31 @@ namespace HouseOfCardsMVC.Controllers
         {
             var game = HttpContext.Application["Game-" + Game_Id] as GameModel;
             GameMethods.EndGame(game, HttpContext);
-
-            var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<GameHub>().Clients.All;
-            hubContext.Redirect("/Game/");
         }
 
         public void BeginPhase1Handler(int Game_Id)
         {
             var game = HttpContext.Application["Game-" + Game_Id] as GameModel;
             PhaseMethods.BeginPhase1(game, HttpContext);
-
-            var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<GameHub>();
-            hubContext.Clients.All.redirect("/Game/");
         }
 
         public void BeginPhase2Handler(int Game_Id)
         {
             var game = HttpContext.Application["Game-" + Game_Id] as GameModel;
-            // If no illegal actions ahve happened then move to the next round
+            // If no illegal actions have happened then move to the next round
             if (PhaseMethods.BeginPhase2(game, HttpContext) == 0)
             {
+                // End the current round
                 PhaseMethods.EndRound(game, HttpContext);
+                // Begin the next round
+                PhaseMethods.BeginPhase1(game, HttpContext);
             }
-
-            var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<GameHub>().Clients.All;
-            hubContext.Redirect("/Game/");
         }
 
         public void BeginPhase3Handler(int Game_Id)
         {
             var game = HttpContext.Application["Game-" + Game_Id] as GameModel;
             PhaseMethods.BeginPhase3(game, HttpContext);
-
-            var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<GameHub>().Clients.All;
-            hubContext.Redirect("/Game/");
         }
 
         public string EndRoundHandler(int Game_Id, string Vote_Ids)
@@ -156,13 +163,12 @@ namespace HouseOfCardsMVC.Controllers
             game.Vote_Ids = Vote_Ids;
             var result = PhaseMethods.EndRound(game, HttpContext);
 
+            PhaseMethods.BeginPhase1(game, HttpContext);
+
             return result;
             //var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<GameHub>().Clients.All;
             //hubContext.Redirect("/Game/");
         }
-
-
-
 
         /// <summary>
         /// When a player confirms they are ready to proceed with the phase this fires, it checks if there are any other players we are waiting on, if not it proceeds with the round

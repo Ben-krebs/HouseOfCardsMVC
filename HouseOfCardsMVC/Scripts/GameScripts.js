@@ -168,9 +168,18 @@ function NoVote_Button() {
         url: '/Game/EndRoundHandler',
         type: "POST",
         datatype: JSON,
-        data: { Player_Name: $('#PlayerName_Input').val() },
-        success: function () {
-            window.location.href = '/Game/';
+        data: { Game_Id: GlobalGameId },
+        success: function (data) {
+            if (data === "Game Over") {
+                hub.server.redirect('/Game/End');
+            }
+            else {
+                Open_Partial_Div('String', 'Game/Partials/Vote_Result', data);
+
+                setTimeout(function () {
+                    hub.server.redirect('/Game/');
+                }, 6000);
+            }
         }
     });
 }
@@ -194,22 +203,30 @@ function ConfirmVote_Button(count) {
         datatype: JSON,
         data: { Game_Id: GlobalGameId, Vote_Ids: vote_ids },
         success: function (data) {
-            Open_Partial_Div('String', 'Game/Partials/Vote_Result', data)
+            if (data === "Game Over") {
+                hub.server.redirect('/Game/End');
+            }
+            else {
+                Open_Partial_Div('String', 'Game/Partials/Vote_Result', data);
 
-            setTimeout(function () {
-                window.location.href = '/Game/';
-            }, 6000);
-       
+                setTimeout(function () {
+                    hub.server.redirect('/Game/');
+                }, 6000);
+            }     
         }
     });
 }
 
-function Accuse_Button(elm) {
+function Accuse_Button(elm, max) {
+
     if ($(elm).hasClass('active')) {
-        AccuseAlert($(elm).data('name'), $(elm).data('id'));
+        AcquitAlert($(elm).data('id'));
     }
     else {
-        AcquitAlert($(elm).data('id'));
+        if ($('#Player_Votes .active').length === max) {
+            return;
+        }
+        AccuseAlert($(elm).data('name'), $(elm).data('id'));
     }
     $($(elm).toggleClass('active'));
 }

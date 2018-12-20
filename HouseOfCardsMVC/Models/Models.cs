@@ -24,11 +24,12 @@ namespace HouseOfCardsMVC.Models
         public string Event_Ids { get; set; }
         public string Historic_Event_Ids { get; set; } // Cool
         public int Round { get; set; }
+        public int DirtCount { get; set; }
+
+        public Random Random { get; set; }
 
         public HashSet<int> Active_Card_Ids { get; set; }
-        // Collection of players found via their Id
         public HashSet<PlayerModel> Players { get; set; }
-       // public HashSet<VoteModel> Votes { get; set; }
 
         public void PopulatePlayers(HttpContextBase Context)
         {
@@ -64,7 +65,7 @@ namespace HouseOfCardsMVC.Models
         public int PendingScore { get; set; }
 
         public int Score { get; set; }
-        public bool Dirty { get { return String.IsNullOrEmpty(Dirt); } }
+        public bool Dirty { get { return !String.IsNullOrEmpty(Dirt); } }
 
         public HashSet<string> Messages { get; set; }
     
