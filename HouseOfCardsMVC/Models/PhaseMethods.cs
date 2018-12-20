@@ -21,6 +21,9 @@ namespace HouseOfCardsMVC.Models
                 var player = Context.Application["Player-" + id] as PlayerModel;
                 player.Card_Ids = GenerateHand(1);
                 Context.Application["Player-" + id] = player;
+
+                //Clear any old messages
+                player.Messages.Clear();
             }
             Game.Phase = 1;
             Context.Application["Game-" + Game.Id] = Game;
@@ -37,6 +40,7 @@ namespace HouseOfCardsMVC.Models
             string[] player_Ids = Game.Player_Ids.SplitAndTrim(',');
             Dictionary<string, int> PendingScores = new Dictionary<string, int>();
             PlayerModel[] players = new PlayerModel[player_Ids.Length];
+            int dirtCount = 0;
 
             // First build up the array of card effects
             for (int i = 0; i < player_Ids.Length; i++)
@@ -49,29 +53,35 @@ namespace HouseOfCardsMVC.Models
             foreach (var player in players)
             {
                 //var player = players.FirstOrDefault(a => a.Id == id);
+                if(player.SelectedCard != null)
+                {
+                    // Find the action the player has made this round
+                    var card = Constants.Cards.GetCard(player.SelectedCard);
+                    // Apply the self actions
+                    player.Dirt = card.Dirty ? card.Name : null;
+                    dirtCount += player.Dirty ? 1 : 0;
 
-                // Find the action the player has made this round
-                var card = Constants.Cards.GetCard(player.SelectedCard);
-                // Apply the self actions
-                player.Dirt = card.Dirty ? card.Name : null;
-                player.Defense = card.Defense;
-                if (card.Target == Constants.List_CardTargets.Self)
-                {
-                    player.PendingScore += card.Score;
-                }
-                else if (card.Target == Constants.List_CardTargets.Other)
-                {
-                    // Store the pending action against its target
-                    PendingScores[player.SelectedTarget] += card.Score;
-                }
-                else if (card.Target == Constants.List_CardTargets.Global)
-                {
-                    // Store the pending action against its targets
-                    foreach(var score in PendingScores.Where(a => a.Key != player.Id))
+                    player.Defense = card.Defense;
+                    if (card.Target == Constants.List_CardTargets.Self)
                     {
-                        PendingScores[score.Key] += card.Score;
+                        player.PendingScore += card.Score;
+                    }
+                    else if (card.Target == Constants.List_CardTargets.Other)
+                    {
+                        // Store the pending action against its target
+                        PendingScores[player.SelectedTarget] += card.Score;
+                    }
+                    else if (card.Target == Constants.List_CardTargets.Global)
+                    {
+                        // Store the pending action against its targets
+                        foreach (var score in PendingScores.Where(a => a.Key != player.Id))
+                        {
+                            PendingScores[score.Key] += card.Score;
+                        }
                     }
                 }
+                //Clear any old messages
+                player.Messages.Clear();
 
                 // Create the new hand for the player
                 player.Card_Ids = GenerateHand(2);          
@@ -80,8 +90,9 @@ namespace HouseOfCardsMVC.Models
             // Finally, apply them and generate the card messages
             foreach (var player in players)
             {
+
                 player.PendingScore -= PendingScores[player.Id];
-                player.Messages.Add("X players have been found to be acting illegally.");
+                player.Messages.Add(dirtCount + " players have been found to be acting illegally.");
 
                 Context.Application["Player-" + player.Id] = player;
             }
@@ -109,27 +120,33 @@ namespace HouseOfCardsMVC.Models
             // Then calculate the card actions
             foreach (var player in players)
             {
-                // Find the action the player has made this round
-                var card = Constants.Cards.GetCard(player.SelectedCard);
-                // Apply the self actions
-                player.Defense = card.Defense;
-                player.Baiting = card.Baiting;
+                if (player.SelectedCard != null)
+                {
+                    // Find the action the player has made this round
+                    var card = Constants.Cards.GetCard(player.SelectedCard);
+                    // Apply the self actions
+                    player.Defense = card.Defense;
+                    player.Baiting = card.Baiting;
 
-                if (card.Target == Constants.List_CardTargets.Other)
-                {
-                    // Store the pending action against its target
-                    PendingInvestigations.Add(new InvestigationModel { Game_Id = Game.Id, Instigator_Id = player.Id, Target_Id = player.SelectedTarget, Type = card.Category });
-                }
-                else if (card.Target == Constants.List_CardTargets.Global)
-                {
-                    // Store the pending action against its targets
-                    foreach (var target in players.Where(a => a.Id != player.Id))
+                    if (card.Target == Constants.List_CardTargets.Other)
                     {
-                        PendingInvestigations.Add(new InvestigationModel { Game_Id = Game.Id, Instigator_Id = player.Id, Target_Id = target.Id, Type = card.Category });
+                        // Store the pending action against its target
+                        PendingInvestigations.Add(new InvestigationModel { Game_Id = Game.Id, Instigator_Id = player.Id, Target_Id = player.SelectedTarget, Type = card.Category });
                     }
-                }
+                    else if (card.Target == Constants.List_CardTargets.Global)
+                    {
+                        // Store the pending action against its targets
+                        foreach (var target in players.Where(a => a.Id != player.Id))
+                        {
+                            PendingInvestigations.Add(new InvestigationModel { Game_Id = Game.Id, Instigator_Id = player.Id, Target_Id = target.Id, Type = card.Category });
+                        }
+                    }
 
-                // Create the new hand for the player
+                }
+                //Clear any old messages
+                player.Messages.Clear();
+
+                // Clear the hand for the player
                 player.Card_Ids = new int[0];
             }
 
@@ -158,9 +175,7 @@ namespace HouseOfCardsMVC.Models
                                // Find out who this player has targeted with their last action
                                 break;
                         }
-
                     }
-
                     player.Messages.Add(result);
                 }
 

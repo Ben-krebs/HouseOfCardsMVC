@@ -3,9 +3,20 @@
 @{
     Layout = "~/Views/Shared/_Layout-Game.cshtml";
     ViewBag.Title = "Investigate";
+
+    bool Messages = Model.Messages.Any();
 }
 
-<div class="Padding-Box">
+<div id="Investigate_Messages_Div" class="Padding-Box" @(Messages ? "" : "hidden")>
+    <h2>Messages</h2>
+    @foreach(string message in Model.Messages)
+    {
+        <label>@message</label>
+    }
+    <button onclick="$('#Investigate_Messages_Div').hide(); $('.Game-Body').show();">Close</button>
+</div>
+
+<div class="Game-Body Padding-Box" @(Messages ? "hidden" : "")>
     <div class="row">
         <div class="col-sm-6">
             <p>Card 1</p>

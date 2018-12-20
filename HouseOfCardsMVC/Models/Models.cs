@@ -8,6 +8,11 @@ namespace HouseOfCardsMVC.Models
 
     public class GameModel
     {
+        public GameModel()
+        {
+            this.Players = new HashSet<PlayerModel>();
+        }
+
         public int Id { get; set; }
         public bool Active { get; set; }
         public int Phase { get; set; }
@@ -17,13 +22,28 @@ namespace HouseOfCardsMVC.Models
         public string Historic_Event_Ids { get; set; } // Cool
         public int Round { get; set; }
         // Collection of players found via their Id
-        public PlayerModel[] Players { get; set; }
+        public HashSet<PlayerModel> Players { get; set; }
+
+        public void PopulatePlayers(HttpContextBase Context)
+        {
+            foreach (var id in this.Player_Ids.SplitAndTrim(','))
+            {
+                var gamePlayer = Context.Application["Player-" + id] as PlayerModel;
+                this.Players.Add(gamePlayer);
+            }
+        }
     }
 
     public class PlayerModel
     {
+        public PlayerModel()
+        {
+            this.Messages = new HashSet<string>();
+        }
+
         public string Id { get; set; }
         public int Game_Id { get; set; }
+        public string Connection_Id { get; set; }
         public string Name { get; set; }
         public bool Ready { get; set; }
         public string Dirt { get; set; }
@@ -35,7 +55,7 @@ namespace HouseOfCardsMVC.Models
         public int Score { get; set; }
         public bool Dirty { get { return String.IsNullOrEmpty(Dirt); } }
 
-        public List<string> Messages { get; set; }
+        public HashSet<string> Messages { get; set; }
     
         public int[] Card_Ids { get; set; }
         // Game found via Id
