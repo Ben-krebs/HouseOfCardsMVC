@@ -23,6 +23,14 @@ $(function () {
         $('#players').append("<h2>" + name + "</h2>");
     };  
 
+    hub.client.alertOnAccuse = function (name, id) {
+        $('#Accuse_Ids_Div').append("<p class='Accuse-" + id + "'>" + name + "</p>");
+    };
+
+    hub.client.alertOnAcquit = function (id) {
+        $('#Accuse_Ids_Div .Accuse-' + id).remove();
+    };  
+
     // Start the connection.  
     $.connection.hub.start().done(function () {
         if (typeof (connectionStart) === 'function') {
@@ -31,6 +39,13 @@ $(function () {
     });
 });
 
+function AccuseAlert(name, id) {
+    hub.server.alertAccuse(name, id);
+}
+
+function AcquitAlert(id) {
+    hub.server.alertAcquit(id);
+}
 
 function JoinGameAlert() {
     hub.server.joinGroup(GlobalGameId, $.connection.hub.id, GlobalPlayerName);
@@ -40,7 +55,6 @@ function LeaveGame_Button() {
     hub.server.leaveGroup(GlobalGameId, $.connection.hub.id, GlobalPlayerName);
     window.location.href = '/Game/';
 }
-
 
 
 // Home page, used to create a new game
@@ -140,6 +154,59 @@ function PlayCard_Button(id, target) {
     }
 }
 
+// Accuse page, no vote reached
+function NoVote_Button() {
+
+    $.ajax({
+        url: '/Game/CreateGameHandler',
+        type: "POST",
+        datatype: JSON,
+        data: { Player_Name: $('#PlayerName_Input').val() },
+        success: function () {
+            window.location.href = '/Game/';
+        }
+    });
+}
+
+// Accuse page vote confirmed
+function ConfirmVote_Button(count) {
+    // First validate the input
+    var elms = $('#Player_Votes .active');
+
+    if ($(elms).length !== count) {
+        return;
+    }
+    var vote_ids = "";
+    $.each(elms, function () {
+        vote_ids += "," + $(this).data('id');
+    });
+
+    $.ajax({
+        url: '/Game/EndRoundHandler',
+        type: "POST",
+        datatype: JSON,
+        data: { Game_Id: GlobalGameId, Vote_Ids: vote_ids },
+        success: function (data) {
+            Open_Partial_Div('String', 'Game/Partials/Vote_Result', data)
+
+            setTimeout(function () {
+                window.location.href = '/Game/';
+            }, 6000);
+       
+        }
+    });
+}
+
+function Accuse_Button(elm) {
+    if ($(elm).hasClass('active')) {
+        AccuseAlert($(elm).data('name'), $(elm).data('id'));
+    }
+    else {
+        AcquitAlert($(elm).data('id'));
+    }
+    $($(elm).toggleClass('active'));
+}
+
 //////// Load new divs
 
 function Load_Game_Partial(partial, div) {
@@ -178,6 +245,18 @@ function Load_Card_Partial(partial, div, id) {
     });
 }
 
+function Load_String_Partial(partial, div, id) {
+    $.ajax({
+        url: '/Home/Partial_String',
+        type: "POST",
+        datatype: JSON,
+        data: { Data: id, Partial: partial },
+        success: function (data) {
+            $(div).html(data);
+        }
+    });
+}
+
 function Open_Partial_Div(type, partial, id) {
     var div = '#Partial_Body';
     switch (type) {
@@ -189,6 +268,9 @@ function Open_Partial_Div(type, partial, id) {
             break;
         case "Game":
             Load_Game_Partial(partial, div);
+            break;
+        case "String":
+            Load_String_Partial(partial, div, id);
             break;
     }
     ShowPartialDiv();

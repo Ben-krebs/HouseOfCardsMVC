@@ -47,5 +47,10 @@ namespace HouseOfCardsMVC.Controllers
         {
             return PartialView("~/Views/" + Partial + ".cshtml", Constants.Cards.GetCard(Card_Id));
         }
+
+        public ActionResult Partial_String(string Partial, string Data)
+        {
+            return PartialView("~/Views/" + Partial + ".cshtml", Data);
+        }
     }
 }

@@ -43,8 +43,5 @@ namespace HouseOfCardsMVC.Models
             Player.Ready = true;
             return Player;
         }
-
-
-
     }
 }

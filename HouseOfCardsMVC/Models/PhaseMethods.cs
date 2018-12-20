@@ -194,7 +194,7 @@ namespace HouseOfCardsMVC.Models
             Context.Application["Game-" + Game.Id] = Game;
         }
 
-        public static void EndRound(GameModel Game, HttpContextBase Context)
+        public static string EndRound(GameModel Game, HttpContextBase Context)
         {
             string[] player_Ids = Game.Player_Ids.SplitAndTrim(',');
             PlayerModel[] players = new PlayerModel[player_Ids.Length];
@@ -229,24 +229,31 @@ namespace HouseOfCardsMVC.Models
                 }
             }
 
-
             // Finally add the new scores to each player
             foreach (var player in players)
             {
-                if(player.Dirty && (Game.Vote_Ids ?? "").Contains(player.Id))
+                if(player.Dirty)
                 {
-                    player.PendingScore -= 600;
+                    if((Game.Vote_Ids ?? "").Contains(player.Id))
+                    {
+                        player.PendingScore -= 600;
+                    }
                 }
-                else
+                else 
                 {
+                    player.PendingScore += (100 * correctVotes);
+                    player.PendingScore -= (100 * wrongVotes);
+                }
 
-                }
                 player.Score += player.PendingScore;
                 Context.Application["Player-" + player.Id] = player;
             }
 
             Game.Phase = 1;
             Context.Application["Game-" + Game.Id] = Game;
+
+
+            return (String.IsNullOrEmpty(Game.Vote_Ids) ? "No Vote" : (correctVotes == 0 ? "Wrong" : wrongVotes == 0 ? "Correct" : "Partial"));
         }
 
         public static int[] GenerateHand(int Phase)

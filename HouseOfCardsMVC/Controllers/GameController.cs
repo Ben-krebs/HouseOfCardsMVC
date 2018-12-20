@@ -150,11 +150,13 @@ namespace HouseOfCardsMVC.Controllers
             hubContext.Redirect("/Game/");
         }
 
-        public void EndRoundHandler(int Game_Id)
+        public string EndRoundHandler(int Game_Id, string Vote_Ids)
         {
             var game = HttpContext.Application["Game-" + Game_Id] as GameModel;
-            PhaseMethods.EndRound(game, HttpContext);
+            game.Vote_Ids = Vote_Ids;
+            var result = PhaseMethods.EndRound(game, HttpContext);
 
+            return result;
             //var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<GameHub>().Clients.All;
             //hubContext.Redirect("/Game/");
         }
