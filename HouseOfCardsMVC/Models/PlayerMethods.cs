@@ -19,20 +19,24 @@ namespace HouseOfCardsMVC.Models
         }
 
         // Don't think we need this card
-        public static PlayerModel ClearPlayer(PlayerModel Player, bool Cards = true)
+        public static PlayerModel ClearPlayer(PlayerModel Player, bool Full = true)
         {
             // Clear the player
             Player.Ready = false;
-            Player.PendingDefense = 0;
-            Player.PendingScore = 0;
             Player.SelectedCard = null;
             Player.SelectedTarget = null;
-            Player.DefenseType = null;
-            Player.Baiting = false;
-            Player.Dirt = null;
 
-            //Clear any old messages
-            Player.Messages.Clear();
+            if (Full)
+            {
+                Player.PendingDefense = 0;
+                Player.PendingScore = 0;
+                Player.DefenseType = null;
+                Player.Baiting = false;
+                Player.Dirt = null;
+                //Clear any old messages
+                //Player.Messages.Clear();        
+            }
+
             return Player;
         }
 

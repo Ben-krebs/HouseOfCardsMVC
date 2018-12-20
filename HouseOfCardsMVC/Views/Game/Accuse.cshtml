@@ -11,13 +11,13 @@
 
 <div id="Accuse_Messages_Div" class="Padding-Box" @(Messages ? "" : "hidden")>
     <h2>Messages</h2>
-    @foreach (string message in Model.Messages)
-    {
-        <label>@message</label>
-    }
-
+    <ul>
+        @foreach (string message in Model.Messages)
+        {
+            <li><h4>@message</h4></li>
+        }
+    </ul>
     <button class="btn btn-default" onclick="$('#Accuse_Messages_Div').hide(); $('.Game-Body').show();">Close</button>
-
 </div>
 
 @if (Model.Voting)
@@ -27,15 +27,13 @@
         @foreach (var Player in Model.Game.Players)
         {
             <div class="col-sm-6">
-                <div onclick="Accuse_Button(this)" data-name="@Player.Name" data-id="@Player.Id" class="btn btn-primary Margin-Bottom FullWidth">@Player.Name</div>
+                <div onclick="Accuse_Button(this, @Model.Game.DirtCount)" data-name="@Player.Name" data-id="@Player.Id" class="btn btn-primary Margin-Bottom FullWidth">@Player.Name</div>
             </div>
         }
-
-
     </div>  
     <div class="text-center">
         <button class="btn btn-default" onclick="NoVote_Button()">NO VOTE</button>
-        <button class="btn btn-success" onclick="ConfirmVote_Button()">CONFIRM</button>
+        <button class="btn btn-success" onclick="ConfirmVote_Button(@Model.Game.DirtCount)">CONFIRM</button>
     </div>
 </div>
 }

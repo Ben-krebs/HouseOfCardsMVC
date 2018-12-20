@@ -8,10 +8,10 @@
     </div>
 
     <div class="row">
-        @foreach (var Player in Model.Players)
+        @foreach (var Player in Model.Players.Where(a => a.Id != Session.SessionID))
         {
             <div class="col-sm-6 Margin-Bottom">
-                <div onclick="$('.active').removeClass('active'); $(this).addClass('active'); GlobalSelectedTarget ='@Player.Id'" class="btn btn-primary FullWidth">@Player.Name</div>
+                <div onclick="$('.active').removeClass('active'); $(this).addClass('active'); GlobalSelectedTarget = '@Player.Id'" class="btn btn-primary FullWidth">@Player.Name</div>
             </div>
         }
     </div>

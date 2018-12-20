@@ -11,11 +11,13 @@
 
 <div id="Scheme_Messages_Div" class="Padding-Box" @(Messages ? "" : "hidden")>
     <h2>Messages</h2>
-    @foreach (string message in Model.Messages)
-    {
-        <label>@message</label>
-    }
-    <button onclick="$('#Scheme_Messages_Div').hide(); $('.Game-Body').show();">Close</button>
+    <ul>
+        @foreach (string message in Model.Messages)
+        {
+            <li><h4>@message</h4></li>
+        }
+    </ul>
+    <button class="btn btn-default" onclick="$('#Scheme_Messages_Div').hide(); $('.Game-Body').show();">Close</button>
 </div>
 
 <div class="Game-Body Padding-Box" @(Messages ? "hidden" : "")>
