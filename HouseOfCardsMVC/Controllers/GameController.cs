@@ -131,7 +131,11 @@ namespace HouseOfCardsMVC.Controllers
         public void BeginPhase2Handler(int Game_Id)
         {
             var game = HttpContext.Application["Game-" + Game_Id] as GameModel;
-            PhaseMethods.BeginPhase2(game, HttpContext);
+            // If no illegal actions ahve happened then move to the next round
+            if (PhaseMethods.BeginPhase2(game, HttpContext) == 0)
+            {
+                PhaseMethods.EndRound(game, HttpContext);
+            }
 
             var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<GameHub>().Clients.All;
             hubContext.Redirect("/Game/");
@@ -153,6 +157,12 @@ namespace HouseOfCardsMVC.Controllers
 
             var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<GameHub>().Clients.All;
             hubContext.Redirect("/Game/");
+        }
+
+
+        public bool VoteHandler(int Game_Id, string Target_Id)
+        {
+
         }
 
         /// <summary>

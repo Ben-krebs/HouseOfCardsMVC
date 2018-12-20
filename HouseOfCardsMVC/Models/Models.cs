@@ -10,7 +10,9 @@ namespace HouseOfCardsMVC.Models
     {
         public GameModel()
         {
+            this.Votes = new HashSet<VoteModel>();
             this.Players = new HashSet<PlayerModel>();
+            this.Active_Card_Ids = new HashSet<int>();
         }
 
         public int Id { get; set; }
@@ -21,8 +23,11 @@ namespace HouseOfCardsMVC.Models
         public string Event_Ids { get; set; }
         public string Historic_Event_Ids { get; set; } // Cool
         public int Round { get; set; }
+
+        public HashSet<int> Active_Card_Ids { get; set; }
         // Collection of players found via their Id
         public HashSet<PlayerModel> Players { get; set; }
+        public HashSet<VoteModel> Votes { get; set; }
 
         public void PopulatePlayers(HttpContextBase Context)
         {
@@ -43,15 +48,19 @@ namespace HouseOfCardsMVC.Models
 
         public string Id { get; set; }
         public int Game_Id { get; set; }
-        public string Connection_Id { get; set; }
         public string Name { get; set; }
         public bool Ready { get; set; }
         public string Dirt { get; set; }
         public string Defense { get; set; }
         public bool Baiting { get; set; }
+        public bool Voting { get; set; }
+
         public int? SelectedCard { get; set; }
         public string SelectedTarget { get; set; }
+
+        public int PendingDefense { get; set; }
         public int PendingScore { get; set; }
+
         public int Score { get; set; }
         public bool Dirty { get { return String.IsNullOrEmpty(Dirt); } }
 
@@ -98,11 +107,16 @@ namespace HouseOfCardsMVC.Models
         public string Description { get; set; }
         public string Image { get; set; }
         public bool Dirty { get; set; }
+
+        public int Attack { get; set; }
         public int Score { get; set; }
+        public int Defense { get; set; }
+
         public string Target { get; set; }
-        public string Category { get; set; }
-        public string Defense { get; set; }
-        public bool Baiting { get; set; }
+        public string Type { get; set; }
+        public string SubType { get; set; }
+
+        public int Effect_Id { get; set; }
     }
 
 

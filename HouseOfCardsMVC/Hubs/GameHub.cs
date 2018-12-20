@@ -39,10 +39,16 @@ namespace HouseOfCardsMVC
             await Clients.Group(groupName).AlertOnJoin(PlayerName + " has joined");
         }
 
-        public async Task LeaveGroup(string groupName)
+        public async Task LeaveGroup(string groupName, string Player_Id)
         {
             await Groups.Remove(Context.ConnectionId, groupName);
             await Clients.Group(groupName).AlertOnLeave(Context.ConnectionId + " has left");
+
+            var game = HttpContext.Current.Application["Game-" + groupName] as Models.GameModel;
+            game.Player_Ids.Replace("," + Player_Id, "");
+
+            HttpContext.Current.Application["Game-" + groupName] = game;
+            HttpContext.Current.Application["Player-" + Player_Id] = null;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿
+﻿@using HouseOfCardsMVC.Models
+@model PlayerModel
 @{
     Layout = "~/Views/Shared/_Layout-Game.cshtml";
     ViewBag.Title = "Accuse";
@@ -14,24 +15,26 @@
     {
         <label>@message</label>
     }
-    <button onclick="$('#Accuse_Messages_Div').hide(); $('.Game-Body').show();">Close</button>
+    @if (Model.Voting)
+    { 
+        <button onclick="$('#Accuse_Messages_Div').hide(); $('.Game-Body').show();">Close</button>
+    }
 </div>
 
-<div class="Game-Body Padding-Box" @(Messages ? "hidden" : "")>
-    <div class="row">
-        <div class="col-sm-6">
-            <p>Player 1</p>
-        </div>
-        <div class="col-sm-6">
-            <p>Player 2</p>
+@if (Model.Voting)
+{
+    <div class="Game-Body Padding-Box" @(Messages ? "hidden" : "")>
+        <div class="row">
+            @foreach (var Player in Model.Game.Players)
+            {
+                <div class="col-sm-6">
+                    <div onclick="$('.active').removeClass('.active'); $(this).addClass('active'); GlobalSelectedTarget ='@Player.Id'" class="Padding-Box bg-primary">@Player.Name</div>
+                </div>
+            }
+
+            <div class="modal-footer">
+                <button onclick="ConfirmTarget_Button()">CONFIRM</button>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-6">
-            <p>Player 3</p>
-        </div>
-        <div class="col-sm-6">
-            <p>Player 4</p>
-        </div>
-    </div>
-</div>
+}

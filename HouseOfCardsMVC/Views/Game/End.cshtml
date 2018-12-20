@@ -1,10 +1,23 @@
-﻿
+﻿@using HouseOfCardsMVC.Models
+@model PlayerModel
 @{
     Layout = "~/Views/Shared/_Layout-Game.cshtml";
     ViewBag.Title = "Game Over";
 }
 
 <div class="Padding-Box">
-    <h5>Someone Won! Whoop!</h5>
+    <h5>Game Over</h5>
 </div>
 
+<div>
+    <ul>
+        @foreach (var Player in Model.Game.Players)
+        {
+            <li>
+                @Player.Name : @Player.Score
+            </li>
+        }
+    </ul>
+
+    <button onclick="LeaveGame_Button()">Exit</button>
+</div>
