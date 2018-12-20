@@ -17,14 +17,22 @@ namespace HouseOfCardsMVC
 
         public void AlertJoin(string Name)
         {
-            // Call the redirect method for all clients
             Clients.All.AlertOnJoin(Name);
         }
 
         public void AlertLeave(string Name)
         {
-            // Call the redirect method for all clients
             Clients.All.AlertOnLeave(Name);
+        }
+
+        public void AlertAccuse(string Name, string Id)
+        {
+            Clients.All.AlertOnAccuse(Name, Id);
+        }
+
+        public void AlertAcquit(string Id)
+        {
+            Clients.All.AlertOnAcquit(Id);
         }
 
         public async Task JoinGroup(string groupName, string ConnectionId, string PlayerName)
