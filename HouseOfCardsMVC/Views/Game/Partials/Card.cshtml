@@ -18,12 +18,22 @@
         }
     </h2>
     <p>@Model.Description</p>
-    @if (Model.Phase == 1)
+    @if (Model.Effect_Id == 0)
     {
-    <div class="flex">
-        <div class="Padding-Box text-success Margin-Right bg-success Border-r4">@Model.Score</div>
-        <div class="Padding-Box text-primary Margin-Right bg-primary Border-r4">@Model.Defense</div>
-        <div class="Padding-Box text-danger bg-danger Border-r4">@Model.Attack</div>
-    </div>
+        if (Model.Phase == 1)
+        {
+            <div class="flex">
+                <div class="Padding-Box text-success Margin-Right bg-success Border-r4">@Model.Score</div>
+                <div class="Padding-Box text-primary Margin-Right bg-primary Border-r4">@Model.Defense</div>
+                <div class="Padding-Box text-danger bg-danger Border-r4">@Model.Attack</div>
+            </div>
+        }
     }
+    else
+    {
+        <div class="flex">
+            <div class="Padding-Box text-primary Margin-Right bg-warning Border-r4">Special</div>
+        </div>
+    }
+
 </div>

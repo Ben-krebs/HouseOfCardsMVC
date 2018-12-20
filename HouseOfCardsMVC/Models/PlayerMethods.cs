@@ -33,6 +33,7 @@ namespace HouseOfCardsMVC.Models
                 Player.DefenseType = null;
                 Player.Baiting = false;
                 Player.Dirt = null;
+                Player.Active_Card_Ids.Clear();
                 //Clear any old messages
                 //Player.Messages.Clear();        
             }

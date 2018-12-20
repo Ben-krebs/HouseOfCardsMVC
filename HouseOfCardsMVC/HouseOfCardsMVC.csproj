@@ -222,6 +222,7 @@
     <Content Include="Views\Game\Partials\Card_Target.cshtml" />
     <Content Include="Views\Game\Partials\Vote_Result.cshtml" />
     <Content Include="Views\Game\Partials\Card.cshtml" />
+    <Content Include="Views\Game\Partials\Card_Empty.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

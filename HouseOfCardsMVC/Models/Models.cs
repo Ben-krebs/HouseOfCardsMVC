@@ -46,6 +46,7 @@ namespace HouseOfCardsMVC.Models
         public PlayerModel()
         {
             this.Messages = new HashSet<string>();
+            this.Active_Card_Ids = new HashSet<int>();
         }
 
         public string Id { get; set; }
@@ -57,6 +58,8 @@ namespace HouseOfCardsMVC.Models
         public string DefenseType { get; set; }
         public bool Baiting { get; set; }
         public bool Voting { get; set; }
+        public HashSet<int> Active_Card_Ids { get; set; }
+
 
         public int? SelectedCard { get; set; }
         public string SelectedTarget { get; set; }

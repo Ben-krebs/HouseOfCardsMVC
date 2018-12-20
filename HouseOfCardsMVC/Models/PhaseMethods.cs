@@ -40,6 +40,7 @@ namespace HouseOfCardsMVC.Models
 
             Game.Phase = 1;
             Game.DirtCount = 0;
+            Game.Active_Card_Ids.Clear();
             Context.Application["Game-" + Game.Id] = Game;
         }
 
@@ -50,7 +51,8 @@ namespace HouseOfCardsMVC.Models
         /// <param name="Context"></param>
         public static int BeginPhase2(GameModel Game, HttpContextBase Context)
         {
-             
+            Game.Active_Card_Ids.Clear();
+
             string[] player_Ids = Game.Player_Ids.SplitAndTrim(',');
             Dictionary<string, int> PendingAttacks = new Dictionary<string, int>();
             PlayerModel[] players = new PlayerModel[player_Ids.Length];
@@ -91,6 +93,21 @@ namespace HouseOfCardsMVC.Models
                             PendingAttacks[key] += card.Attack;
                         }
                     }
+                    if(card.Effect_Id > 0)
+                    {
+                        Game.Active_Card_Ids.Add(card.Effect_Id);
+
+                        switch (card.Effect_Id)
+                        {
+                            case 8:
+                                players.First(a => a.Id == player.SelectedTarget).Active_Card_Ids.Add(8);
+                                break;
+                            case 9:
+                                PendingAttacks[player.Id] += card.Attack;
+                                break;
+                        }
+
+                    }                    
                 }
 
                 // Clear the player
@@ -107,7 +124,16 @@ namespace HouseOfCardsMVC.Models
                 player.Card_Ids = GenerateHand(2, Game.Random);
 
                 PendingAttacks[player.Id] -= player.PendingDefense;
-                if(PendingAttacks[player.Id] > 0)
+
+                if (!player.Dirty && Game.Active_Card_Ids.Contains(6))
+                {
+                    PendingAttacks[player.Id] += 100;
+                }
+                if (player.Dirty && Game.Active_Card_Ids.Contains(7))
+                {
+                    PendingAttacks[player.Id] += 300;
+                }
+                if (PendingAttacks[player.Id] > 0)
                 {
                     player.PendingScore -= PendingAttacks[player.Id];
                 }
@@ -148,23 +174,41 @@ namespace HouseOfCardsMVC.Models
                 {
                     // Find the action the player has made this round
                     var card = Constants.Cards.GetCard(player.SelectedCard);
+
                     // Apply the self actions
                     player.DefenseType += card.SubType;
 
-                    if (card.Target == Constants.List_CardTargets.Other)
+                    if (card.Type == "Investigation")
                     {
-                        // Store the pending action against its target
-                        PendingInvestigations.Add(new InvestigationModel { Game_Id = Game.Id, Instigator_Id = player.Id, Target_Id = player.SelectedTarget, Type = card.SubType });
-                    }
-                    else if (card.Target == Constants.List_CardTargets.Global)
-                    {
-                        // Store the pending action against its targets
-                        foreach (var target in players.Where(a => a.Id != player.Id))
+                        if (card.Target == Constants.List_CardTargets.Other)
                         {
-                            PendingInvestigations.Add(new InvestigationModel { Game_Id = Game.Id, Instigator_Id = player.Id, Target_Id = target.Id, Type = card.SubType });
+                            // Store the pending action against its target
+                            PendingInvestigations.Add(new InvestigationModel { Game_Id = Game.Id, Instigator_Id = player.Id, Target_Id = player.SelectedTarget, Type = card.SubType });
+                        }
+                        else if (card.Target == Constants.List_CardTargets.Global)
+                        {
+                            // Store the pending action against its targets
+                            foreach (var target in players.Where(a => a.Id != player.Id))
+                            {
+                                PendingInvestigations.Add(new InvestigationModel { Game_Id = Game.Id, Instigator_Id = player.Id, Target_Id = target.Id, Type = card.SubType });
+                            }
                         }
                     }
+                    else if (card.Type == "Twist")
+                    {
+                        if (card.Effect_Id > 0)
+                        {
+                            Game.Active_Card_Ids.Add(card.Effect_Id);
+                            switch (card.Effect_Id)
+                            {
+                                case 13: // Baiting card
+                                    player.Baiting = true;
+                                    break;
+                            }
+                        }              
+                    }
                 }
+
                 //Clear any old messages
                 player.Messages.Clear();
 
@@ -182,7 +226,7 @@ namespace HouseOfCardsMVC.Models
                 {
                     var target = players.FirstOrDefault(a => a.Id == investigation.Target_Id);
                     string result = "";
-                    if (target.DefenseType == investigation.Type)
+                    if (target.DefenseType == investigation.Type || Game.Active_Card_Ids.Contains(1))
                     {
                         switch (investigation.Type)
                         {
@@ -285,15 +329,28 @@ namespace HouseOfCardsMVC.Models
             // Finally add the new scores to each player
             foreach (var player in players)
             {
+
+
                 if(player.Dirty)
                 {
                     if((Game.Vote_Ids ?? "").Contains(player.Id))
                     {
-                        player.PendingScore -= 600;
+                        if (player.Baiting)
+                        {
+                            player.PendingScore += 300;
+                        }
+                        else
+                        {
+                            player.PendingScore -= 600;
+                        }           
                     }
                 }
                 else 
                 {
+                    if ((player.Baiting) && (Game.Vote_Ids ?? "").Contains(player.Id))
+                    {
+                        player.PendingScore += 400;
+                    }
                     player.PendingScore += (100 * correctVotes);
                     player.PendingScore -= (100 * wrongVotes);
                 }

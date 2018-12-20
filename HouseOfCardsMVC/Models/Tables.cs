@@ -74,13 +74,13 @@ namespace HouseOfCardsMVC.Models
                     new Card { Id = 55, Type = "Campaign", Description = "Your work hard, you deserve a break, it will only be 5 minutes (This card does nothing)", Name = "Take a power nap",
                         Dirty = false, Image = "", Phase = 1, Score = 0, Attack = 0, Defense = 0,Target = List_CardTargets.Self },
 
-                    new Card { Id = 22, Type = "Twist", Description = "Everyone that played a legal card loses 100 points", Name = "Rat Race", Dirty = false, Image = "", Phase = 1, Score = 0, Target = List_CardTargets.Global },
-                    new Card { Id = 23, Type = "Twist", Description = "Everyone that played an illegal card loses 300 points", Name = "Public opinion poll", Dirty = false, Image = "", Phase = 1, Score = 0, Target = List_CardTargets.Global },
-                    new Card { Id = 24, Type = "Twist", Description = "Choose someone that won’t be able to select which card they play next turn", Name = "New Intern", Dirty = false, Image = "", Phase = 1, Score = 0, Target = List_CardTargets.Other },
-                    new Card { Id = 25, Type = "Twist", Description = "Everyone loses 150 points", Name = "Bad day at the office", Dirty = false, Image = "", Phase = 1, Score = 0, Target = List_CardTargets.Global },
-                    new Card { Id = 26, Type = "Twist", Description = "Random player loses 500 points", Name = "An act of God", Dirty = false, Image = "", Phase = 1, Score = 0, Target = List_CardTargets.Self },
-                    new Card { Id = 27, Type = "Twist", Description = "Nobody gets defence cards in round 2", Name = "Parlimentary Audit", Dirty = false, Image = "", Phase = 1, Score = 0, Target = List_CardTargets.Global },
-                    new Card { Id = 53, Type = "Twist", Description = "Target player receives one less card during Phase 1 of the next round. \r\n\r\n Vladmir appreciates your co-operation", Name = "Intercept delivery", Dirty = false, Image = "", Phase = 1, Score = 0, Target = List_CardTargets.Other },
+                    new Card { Id = 22, Type = "Twist", Description = "Everyone that played a legal card loses 100 points", Name = "Rat Race", Dirty = false, Image = "", Phase = 1, Effect_Id = 6, Target = List_CardTargets.Global },
+                    new Card { Id = 23, Type = "Twist", Description = "Everyone that played an illegal card loses 300 points", Name = "Public opinion poll", Dirty = false, Image = "", Phase = 1, Effect_Id = 7, Target = List_CardTargets.Global },
+                    new Card { Id = 24, Type = "Twist", Description = "Choose someone that won’t be able to select which card they play next turn", Name = "New Intern", Dirty = false, Image = "", Phase = 1, Effect_Id = 8, Target = List_CardTargets.Other },
+                    new Card { Id = 25, Type = "Twist", Description = "Everyone loses 150 points", Name = "Bad day at the office", Dirty = false, Image = "", Phase = 1, Attack = 150, Effect_Id = 9, Target = List_CardTargets.Global },
+                    new Card { Id = 26, Type = "Twist", Description = "Random player loses 500 points", Name = "An act of God", Dirty = false, Image = "", Phase = 1, Effect_Id = 10, Target = List_CardTargets.Self },
+                    new Card { Id = 27, Type = "Twist", Description = "Nobody gets defence cards in round 2", Name = "Parlimentary Audit", Dirty = false, Image = "", Phase = 1, Effect_Id = 11, Target = List_CardTargets.Global },
+                    new Card { Id = 53, Type = "Twist", Description = "Target player receives one less card during Phase 1 of the next round. \r\n\r\n Vladmir appreciates your co-operation", Name = "Intercept delivery", Dirty = false, Image = "", Phase = 1, Effect_Id = 12, Target = List_CardTargets.Other },
 
                     new Card { Id = 28, Type = "Investigation", SubType = "Dirt", Description = "Reveals if the player has done an illegal action this round", Name = "Hire a PI",
                         Dirty = false, Image = "", Phase = 2, Score = 0, Target = List_CardTargets.Other },
@@ -126,12 +126,12 @@ namespace HouseOfCardsMVC.Models
                     new Card { Id = 54, Type = "Defense", SubType = "Dirt", Description = "You have hired a body dboule to act on your behalf in public while you lurk from the shadows", Name = "Body Double",
                         Dirty = false, Image = "", Phase = 2, Score = 0, Target = List_CardTargets.Global },
 
-                    new Card { Id = 47, Type = "Twist", Description = ";", Name = "Baiting card", Dirty = false, Image = "", Phase = 2, Score = 0, Target = List_CardTargets.Self },
-                    new Card { Id = 48, Type = "Twist", Description = ";", Name = "Make investigation cards work incorrectly", Dirty = false, Image = "", Phase = 2, Score = 0, Target = List_CardTargets.Global },
-                    new Card { Id = 49, Type = "Twist", Description = ";", Name = "Nobody’s defence cards work", Dirty = false, Image = "", Phase = 2, Score = 0, Target = List_CardTargets.Global },
-                    new Card { Id = 50, Type = "Twist", Description = ";", Name = "Players that play illegal cards only get half the points they should if they’re successful", Dirty = false, Image = "", Phase = 2, Score = 0, Target = List_CardTargets.Global },
-                    new Card { Id = 51, Type = "Twist", Description = ";", Name = "Person with the highest amount of pending points will get the pending point of the person with the lowest and vise-versa", Dirty = false, Image = "", Phase = 2, Score = 0, Target = List_CardTargets.Self },
-                    new Card { Id = 52, Type = "Twist", Description = ";", Name = "Swap pending points with another player", Dirty = false, Image = "", Phase = 2, Score = 0, Target = List_CardTargets.Other },
+                    new Card { Id = 47, Type = "Twist", Description = "Try to get accused, if you performed an illegal action you will receive 300 points, if you performed a legal action you will gaim 400 points", Name = "Baiting card", Dirty = false, Image = "", Phase = 2, Effect_Id = 13, Target = List_CardTargets.Self },
+                    new Card { Id = 48, Type = "Twist", Description = ";", Name = "Make investigation cards work incorrectly", Dirty = false, Image = "", Phase = 2, Effect_Id = 1, Target = List_CardTargets.Global },
+                    new Card { Id = 49, Type = "Twist", Description = ";", Name = "Nobody’s defence cards work", Dirty = false, Image = "", Phase = 2, Effect_Id = 2, Target = List_CardTargets.Global },
+                    new Card { Id = 50, Type = "Twist", Description = ";", Name = "Players that play illegal cards only get half the points they should if they’re successful", Dirty = false, Image = "", Phase = 2, Effect_Id = 3, Target = List_CardTargets.Global },
+                    new Card { Id = 51, Type = "Twist", Description = ";", Name = "Person with the highest amount of pending points will get the pending point of the person with the lowest and vise-versa", Dirty = false, Image = "", Phase = 2, Effect_Id = 4, Target = List_CardTargets.Self },
+                    new Card { Id = 52, Type = "Twist", Description = ";", Name = "Swap pending points with another player", Dirty = false, Image = "", Phase = 2, Effect_Id = 5, Target = List_CardTargets.Other },
                 };
             }
         }

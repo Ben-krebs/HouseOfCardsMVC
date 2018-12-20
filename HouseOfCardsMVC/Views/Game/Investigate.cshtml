@@ -25,13 +25,27 @@
         <div class="col-sm-6">
             @{
                 Card Card1 = Constants.Cards.GetCard(Model.Card_Ids[0]);
-                @Html.Partial("~/Views/Game/Partials/Card.cshtml", Card1);
+                if (Model.Active_Card_Ids.Contains(8))
+                {
+                    @Html.Partial("~/Views/Game/Partials/Card_Empty.cshtml", Card1);
+                }
+                else
+                {
+                    @Html.Partial("~/Views/Game/Partials/Card.cshtml", Card1);
+                }
             }
         </div>
         <div class="col-sm-6">
             @{
                 var Card2 = Constants.Cards.GetCard(Model.Card_Ids[1]);
-                @Html.Partial("~/Views/Game/Partials/Card.cshtml", Card2);
+                if (Model.Active_Card_Ids.Contains(8))
+                {
+                    @Html.Partial("~/Views/Game/Partials/Card_Empty.cshtml", Card2);
+                }
+                else
+                {
+                    @Html.Partial("~/Views/Game/Partials/Card.cshtml", Card2);
+                }
             }
         </div>
     </div>
@@ -39,13 +53,27 @@
         <div class="col-sm-6">
             @{
                 var Card3 = Constants.Cards.GetCard(Model.Card_Ids[2]);
-                @Html.Partial("~/Views/Game/Partials/Card.cshtml", Card3);
+                if (Model.Active_Card_Ids.Contains(8))
+                {
+                    @Html.Partial("~/Views/Game/Partials/Card_Empty.cshtml", Card3);
+                }
+                else
+                {
+                    @Html.Partial("~/Views/Game/Partials/Card.cshtml", Card3);
+                }
             }
         </div>
         <div class="col-sm-6">
             @{
                 var Card4 = Constants.Cards.GetCard(Model.Card_Ids[3]);
-                @Html.Partial("~/Views/Game/Partials/Card.cshtml", Card4);
+                if (Model.Active_Card_Ids.Contains(8))
+                {
+                    @Html.Partial("~/Views/Game/Partials/Card_Empty.cshtml", Card4);
+                }
+                else
+                {
+                    @Html.Partial("~/Views/Game/Partials/Card.cshtml", Card4);
+                }
             }
         </div>
     </div>
