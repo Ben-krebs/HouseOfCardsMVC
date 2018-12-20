@@ -6,13 +6,16 @@
         <div class="" id="SelectCard_Heading">
             <h2>
                 @Model.Name
-                @if (Model.Dirty)
+                @if (Model.Phase == 1)
                 {
-                    <span class="pull-right badge badge-danger">ILLEGAL</span>
-                }
-                else
-                {
-                    <span class="pull-right badge badge-success">LEGAL</span>
+                    if (Model.Dirty)
+                    {
+                        <span class="pull-right badge badge-danger">ILLEGAL</span>
+                    }
+                    else
+                    {
+                        <span class="pull-right badge badge-success">LEGAL</span>
+                    }
                 }
             </h2>
         </div>
@@ -24,9 +27,14 @@
                 <h3>
                     @Model.Description
                 </h3>
-                <h3>
-                    @Model.Score
-                </h3>
+                @if (Model.Phase == 1)
+                {
+                    <div class="flex">
+                        <div class="Padding-Box text-success Margin-Right bg-success Border-r4">@Model.Score</div>
+                        <div class="Padding-Box text-primary Margin-Right bg-primary Border-r4">@Model.Defense</div>
+                        <div class="Padding-Box text-danger bg-danger Border-r4">@Model.Attack</div>
+                    </div>
+                }
             </div>
         </div>
     </div>

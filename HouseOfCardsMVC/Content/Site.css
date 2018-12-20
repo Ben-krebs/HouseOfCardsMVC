@@ -103,3 +103,14 @@ h2{
 .btn-primary.active {
     background: #2f76aa !important;
 }
+
+.Border-r4{
+    border-radius: 4px;
+}
+
+.bg-danger {
+    background-color: #ffc4c4;
+}
+.bg-success {
+    background-color: #a9ffea;
+}
