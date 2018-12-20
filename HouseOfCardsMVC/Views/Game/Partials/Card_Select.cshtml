@@ -1,43 +1,38 @@
 ﻿@using HouseOfCardsMVC.Models
 @model Card
 
-<div class="container body-content">
-
-    <div class="Card">
-        <div class="modal-header" id="SelectCard_Heading">
-            <h2>@Model.Name</h2>
-            <div>
+<div class="container body-content Margin-Box">
+    <div class="Card @(Model.Dirty ? "Dirty" : "Clean")">
+        <div class="" id="SelectCard_Heading">
+            <h2>
+                @Model.Name
                 @if (Model.Dirty)
                 {
-                    <div class="bg-success">
-                        LEGAL
-                    </div>
+                    <span class="pull-right badge badge-danger">ILLEGAL</span>
                 }
                 else
                 {
-                    <div class="bg-warning">
-                        ILLEGAL
-                    </div>
+                    <span class="pull-right badge badge-success">LEGAL</span>
                 }
-            </div>
+            </h2>
         </div>
         <div class="row">
             <div class="col-sm-4">
                 <img />
             </div>
             <div class="col-sm-8">
-                <div class="Padding-Box">
+                <h3>
                     @Model.Description
-                </div>
-                <div>
+                </h3>
+                <h3>
                     @Model.Score
-                </div>
+                </h3>
             </div>
         </div>
     </div>
 
-    <div class="modal-footer">
-        <button onclick="HidePartialDiv()">BACK</button>
-        <button onclick="PlayCard_Button('@Model.Id', '@Model.Target')">PLAY</button>
+    <div class="text-center">
+        <button class="btn btn-default" onclick="HidePartialDiv()">BACK</button>
+        <button class="btn btn-success" onclick="PlayCard_Button('@Model.Id', '@Model.Target')">PLAY</button>
     </div>
 </div>

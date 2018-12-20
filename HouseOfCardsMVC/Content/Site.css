@@ -1,5 +1,5 @@
 ﻿body {
-    padding-top: 50px;
+    padding-top: 70px;
     padding-bottom: 20px;
 }
 
@@ -31,6 +31,9 @@ textarea {
 .Margin-Box {
     margin: 12px;
 }
+.Margin-Bottom {
+    margin-bottom: 12px;
+}
 
 .Empty-Input {
    border-color: yellow;
@@ -41,4 +44,62 @@ textarea {
 body{
     color: #fff;
     background-color: #4d4d4d;
+}
+
+.btn{
+    padding: 12px 16px;
+    font-size: 24px;
+    text-transform: uppercase;
+}
+
+h1{
+    font-size: 28px;
+    font-weight: bold;
+}
+h2{
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.Card {
+    border: 5px solid #77E0C6;
+    background: #3A3A3A;
+    border-radius: 6px;
+    padding: 16px;
+    font-size: 18px;
+    margin-bottom: 36px;
+    cursor: pointer;
+}
+
+.flex{
+    display: flex;
+}
+.Margin-Right{
+    margin-right: 12px;
+}
+.Margin-ZT{
+    margin-top: 0px;
+}
+
+.Card.Dirty {
+    border-color: #FFCC6A
+}
+.FullWidth{
+    width: 100%;
+}
+.badge.badge-danger {
+    background: #FFCC6A;
+    padding: 6px 12px;
+    font-size: unset;
+}
+.badge.badge-success {
+    background: #77E0C6;
+    padding: 6px 12px;
+    font-size: unset;
+}
+.btn-primary {
+    background: #6FB7EC !important;
+}
+.btn-primary.active {
+    background: #2f76aa !important;
 }

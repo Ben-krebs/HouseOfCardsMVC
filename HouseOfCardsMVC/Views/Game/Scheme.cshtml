@@ -22,20 +22,14 @@
     <div class="row">
         <div class="col-sm-6">
             @{
-                var Card1 = Constants.Cards.GetCard(Model.Card_Ids[0]);
-                <div onclick="Open_Partial_Div('Card', 'Game/Partials/Card_Select', '@Card1.Id')">
-                    <h5>@Card1.Name</h5>
-                    <p>@Card1.Description</p>
-                </div>  
+                Card Card1 = Constants.Cards.GetCard(Model.Card_Ids[0]);
+                @Html.Partial("~/Views/Game/Partials/Card.cshtml", Card1);
             }
         </div>
         <div class="col-sm-6">
             @{
                 var Card2 = Constants.Cards.GetCard(Model.Card_Ids[1]);
-                <div onclick="Open_Partial_Div('Card', 'Game/Partials/Card_Select','@Card2.Id')">
-                    <h5>@Card2.Name</h5>
-                    <p>@Card2.Description</p>
-                </div>
+                @Html.Partial("~/Views/Game/Partials/Card.cshtml", Card2);
             }
         </div>
     </div>
@@ -43,19 +37,13 @@
         <div class="col-sm-6">
             @{
                 var Card3 = Constants.Cards.GetCard(Model.Card_Ids[2]);
-                <div onclick="Open_Partial_Div('Card', 'Game/Partials/Card_Select','@Card3.Id')">
-                    <h5>@Card3.Name</h5>
-                    <p>@Card3.Description</p>
-                </div>
+                @Html.Partial("~/Views/Game/Partials/Card.cshtml", Card3);
             }
         </div>
         <div class="col-sm-6">
             @{
                 var Card4 = Constants.Cards.GetCard(Model.Card_Ids[3]);
-                <div onclick="Open_Partial_Div('Card', 'Game/Partials/Card_Select','@Card4.Id')">
-                    <h5>@Card4.Name</h5>
-                    <p>@Card4.Description</p>
-                </div>
+                @Html.Partial("~/Views/Game/Partials/Card.cshtml", Card4);
             }
         </div>
     </div>

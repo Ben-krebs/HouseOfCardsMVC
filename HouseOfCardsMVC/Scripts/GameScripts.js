@@ -16,11 +16,11 @@ $(function () {
     };
 
     hub.client.alertOnJoin = function (name) {
-        $('#players').append("<p>" + name + "</p>");
+        $('#players').append("<h2>" + name + "</h2>");
     };
 
     hub.client.alertOnLeave = function (name) {
-        $('#players').append("<p>" + name + "</p>");
+        $('#players').append("<h2>" + name + "</h2>");
     };  
 
     hub.client.alertOnAccuse = function (name, id) {
@@ -138,6 +138,7 @@ function ConfirmTarget_Button() {
 }
 
 var CardHeading = '';
+var DirtyCard = false;
 // select a particular card for this round
 function PlayCard_Button(id, target) {
     GlobalSelectedCard = id;
@@ -145,6 +146,7 @@ function PlayCard_Button(id, target) {
 
     if (target === 'Other') {
         CardHeading = $('#SelectCard_Heading').html();
+        DirtyCard = $('#SelectCard_Heading').closest('.Card').hasClass('Dirty');
         Open_Partial_Div('Game', 'Game/Partials/Card_Target', GlobalGameId);
     }
     else {       
