@@ -1,0 +1,28 @@
+﻿@using HouseOfCardsMVC.Models
+@model GameModel
+
+<div class="container body-content">
+
+    <div class="Card">
+        <div class="modal-header" id="SelectTarget_Heading">
+            @* Populates from the Card that was chosen *@
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var Player in Model.Players)
+        {
+            <div class="col-sm-6">
+                <div onclick="$('.active').removeClass('.active'); $(this).addClass('active'); GlobalSelectedTarget ='@Player.Id'" class="Padding-Box bg-primary">@Player.Name</div>
+            </div>
+        }
+    </div>
+
+    <div class="modal-footer">
+        <button onclick="HidePartialDiv()">BACK</button>
+        <button onclick="ConfirmTarget_Button()">CONFIRM</button>
+    </div>
+</div>
+<script>
+    $('#SelectTarget_Heading').html(CardHeading);
+</script>

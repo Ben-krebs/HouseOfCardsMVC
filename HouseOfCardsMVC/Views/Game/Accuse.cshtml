@@ -4,6 +4,9 @@
     ViewBag.Title = "Accuse";
     bool Messages = Model.Messages.Any();
 }
+<script>
+    GlobalPhaseId = 3;
+</script>
 
 <div id="Accuse_Messages_Div" class="Padding-Box" @(Messages ? "" : "hidden")>
     <h2>Messages</h2>

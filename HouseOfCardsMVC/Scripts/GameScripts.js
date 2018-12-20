@@ -105,23 +105,40 @@ function StartGame_Button() {
     });
 }
 
-function SchemeComplete_Button() {
+function ConfirmTarget_Button() {
     $.ajax({
         url: '/Game/ReadyHandler',
         type: "POST",
         datatype: JSON,
-        data: { Game_Id: GlobalGameId, Player_Id: GlobalPlayerId, Phase: 1, Selected_Card_Id: $('#card_id').val(), Selected_Target_Id: $('#target_id').val() },
+        data: { Game_Id: GlobalGameId, Player_Id: GlobalPlayerId, Phase: GlobalPhaseId, Selected_Card_Id: GlobalSelectedCard, Selected_Target_Id: GlobalSelectedTarget },
         success: function (data) {
             if (data === '0') {
                 hub.server.redirect('/Game/');
             }
             else {
-                $('#Pending-Players-Scheme').show();
-                $('#Pending-Players-Scheme-Count').html(data);
+                $('#Ready_Count').html(data);
+                ToggleBody('Ready_Body');
             }        
         }
     });
 }
+
+var CardHeading = '';
+// select a particular card for this round
+function PlayCard_Button(id, target) {
+    GlobalSelectedCard = id;
+    GlobalSelectedTarget = null;
+
+    if (target === 'Other') {
+        CardHeading = $('#SelectCard_Heading').html();
+        Open_Partial_Div('Game', 'Game/Partials/Card_Target', GlobalGameId);
+    }
+    else {       
+        ConfirmTarget_Button();
+    }
+}
+
+//////// Load new divs
 
 function Load_Game_Partial(partial, div) {
     $.ajax({
@@ -130,7 +147,7 @@ function Load_Game_Partial(partial, div) {
         datatype: JSON,
         data: { Game_Id: GlobalGameId, Partial: partial },
         success: function (data) {
-            $(elm).html(data);
+            $(div).html(data);
         }
     });
 }
@@ -142,7 +159,7 @@ function Load_Player_Partial(partial, div) {
         datatype: JSON,
         data: { Partial: partial },
         success: function (data) {
-            $(elm).html(data);
+            $(div).html(data);
         }
     });
 }
@@ -154,7 +171,55 @@ function Load_Card_Partial(partial, div, id) {
         datatype: JSON,
         data: { Card_Id: id, Partial: partial },
         success: function (data) {
-            $(elm).html(data);
+            $(div).html(data);
         }
     });
 }
+
+function Open_Partial_Div(type, partial, id) {
+    var div = '#Partial_Body';
+    switch (type) {
+        case "Card":
+            Load_Card_Partial(partial, div, id);
+            break;
+        case "Player":
+            Load_Player_Partial(partial, div);
+            break;
+        case "Game":
+            Load_Game_Partial(partial, div);
+            break;
+    }
+    ShowPartialDiv();
+}
+
+
+function HidePartialDiv() {
+    $('#Game_Body').fadeIn(200);
+    $('#Partial_Body').hide();
+}
+
+function ShowPartialDiv() {
+    $('#Game_Body').hide();
+    $('#Partial_Body').fadeIn(200);
+}
+
+function ToggleBody(id) {
+    $('.Body-Div').hide();
+    $('#' + id).fadeIn(200);
+}
+
+//function Open_Partial_Modal(type, partial, id) {
+//    var div = '#PartialModal_Content';
+//    switch (type) {
+//        case "Card":
+//            Load_Card_Partial(partial, div, id);
+//            break;
+//        case "Player":
+//            Load_Player_Partial(partial, div);
+//            break;
+//        case "Game":
+//            Load_Game_Partial(partial, div);
+//            break;
+//    }
+//    $('#PartialModal').modal();
+//}

@@ -226,9 +226,7 @@ namespace HouseOfCardsMVC.Models
                     j = r.Next(0, cards.Length);
                 }
 
-                ids[i] = j;
-                //hand[i] = new CardModel { Id = cards[j].Id };
-
+                ids[i] = cards[j].Id;
             }
             return ids;
         }

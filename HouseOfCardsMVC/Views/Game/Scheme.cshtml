@@ -5,6 +5,9 @@
     ViewBag.Title = "Scheme";
     bool Messages = Model.Messages.Any();
 }
+<script>
+    GlobalPhaseId = 1;
+</script>
 
 <div id="Scheme_Messages_Div" class="Padding-Box" @(Messages ? "" : "hidden")>
     <h2>Messages</h2>
@@ -20,7 +23,7 @@
         <div class="col-sm-6">
             @{
                 var Card1 = Constants.Cards.GetCard(Model.Card_Ids[0]);
-                <div onclick="SelectCard_Tile('@Card1.Id')">
+                <div onclick="Open_Partial_Div('Card', 'Game/Partials/Card_Select', '@Card1.Id')">
                     <h5>@Card1.Name</h5>
                     <p>@Card1.Description</p>
                 </div>  
@@ -29,7 +32,7 @@
         <div class="col-sm-6">
             @{
                 var Card2 = Constants.Cards.GetCard(Model.Card_Ids[1]);
-                <div onclick="SelectCard_Tile('@Card2.Id')">
+                <div onclick="Open_Partial_Div('Card', 'Game/Partials/Card_Select','@Card2.Id')">
                     <h5>@Card2.Name</h5>
                     <p>@Card2.Description</p>
                 </div>
@@ -40,7 +43,7 @@
         <div class="col-sm-6">
             @{
                 var Card3 = Constants.Cards.GetCard(Model.Card_Ids[2]);
-                <div onclick="SelectCard_Tile('@Card3.Id')">
+                <div onclick="Open_Partial_Div('Card', 'Game/Partials/Card_Select','@Card3.Id')">
                     <h5>@Card3.Name</h5>
                     <p>@Card3.Description</p>
                 </div>
@@ -49,15 +52,12 @@
         <div class="col-sm-6">
             @{
                 var Card4 = Constants.Cards.GetCard(Model.Card_Ids[3]);
-                <div onclick="SelectCard_Tile('@Card4.Id')">
+                <div onclick="Open_Partial_Div('Card', 'Game/Partials/Card_Select','@Card4.Id')">
                     <h5>@Card4.Name</h5>
                     <p>@Card4.Description</p>
                 </div>
             }
         </div>
     </div>
-    <button onclick="SchemeComplete_Button()">Done</button>
-    <div hidden id="Pending-Players-Scheme" class="bg-danger"><label>Waiting for <span id="Pending-Players-Scheme-Count"></span> Players</label></div>
-
 </div>
 
