@@ -22,9 +22,6 @@ namespace HouseOfCardsMVC.Controllers
             {
                 GameModel game = HttpContext.Application["Game-" + Session["Game_Id"]] as GameModel;
                 PlayerModel player = HttpContext.Application["Player-" + Session.SessionID] as PlayerModel;
-                game.PopulatePlayers(HttpContext);
-                player.Game = game;
-
                 switch (game.Phase)
                 {
                     case 0: return View("~/Views/Game/Start.cshtml", player);
@@ -115,7 +112,7 @@ namespace HouseOfCardsMVC.Controllers
             var game = HttpContext.Application["Game-" + Game_Id] as GameModel;
             GameMethods.EndGame(game, HttpContext);
 
-            var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<GameHub>().Clients.All;
+            var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<Hubs.GameHub>().Clients.All;
             hubContext.Redirect("/Game/");
         }
 
@@ -124,7 +121,7 @@ namespace HouseOfCardsMVC.Controllers
             var game = HttpContext.Application["Game-" + Game_Id] as GameModel;
             PhaseMethods.BeginPhase1(game, HttpContext);
 
-            var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<GameHub>();
+            var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<Hubs.GameHub>();
             hubContext.Clients.All.redirect("/Game/");
         }
 
@@ -133,7 +130,7 @@ namespace HouseOfCardsMVC.Controllers
             var game = HttpContext.Application["Game-" + Game_Id] as GameModel;
             PhaseMethods.BeginPhase2(game, HttpContext);
 
-            var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<GameHub>().Clients.All;
+            var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<Hubs.GameHub>().Clients.All;
             hubContext.Redirect("/Game/");
         }
 
@@ -142,7 +139,7 @@ namespace HouseOfCardsMVC.Controllers
             var game = HttpContext.Application["Game-" + Game_Id] as GameModel;
             PhaseMethods.BeginPhase3(game, HttpContext);
 
-            var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<GameHub>().Clients.All;
+            var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<Hubs.GameHub>().Clients.All;
             hubContext.Redirect("/Game/");
         }
 
@@ -151,7 +148,7 @@ namespace HouseOfCardsMVC.Controllers
             var game = HttpContext.Application["Game-" + Game_Id] as GameModel;
             PhaseMethods.EndRound(game, HttpContext);
 
-            var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<GameHub>().Clients.All;
+            var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<Hubs.GameHub>().Clients.All;
             hubContext.Redirect("/Game/");
         }
 

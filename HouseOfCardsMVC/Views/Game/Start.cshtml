@@ -9,15 +9,11 @@
     <h5>Waiting for more players?</h5>
 
     <div id="players">
-        @foreach(var player in Model.Game.Players.Where(a => a.Id != Model.Id))
-        {
-            <p>@player.Name has joined</p>
-        }
+
     </div>
     <p>Send them the room code: <b>@Model.Game_Id</b></p>
 
     <button onclick="StartGame_Button()">Start Game</button>
-    <button onclick="LeaveGame_Button()">Leave Game</button>
 </div>
 
 

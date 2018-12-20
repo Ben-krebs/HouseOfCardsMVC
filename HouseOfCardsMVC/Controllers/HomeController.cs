@@ -10,10 +10,6 @@ namespace HouseOfCardsMVC.Controllers
     {
         public ActionResult Index()
         {
-            if(Session["Game_Id"] != null)
-            {
-                return RedirectToAction("Index", "Game");
-            }
             return View();
         }
 
@@ -27,6 +23,13 @@ namespace HouseOfCardsMVC.Controllers
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
+
+            return View();
+        }
+
+        public ActionResult Join()
+        {
+            ViewBag.Message = "Join a game.";
 
             return View();
         }

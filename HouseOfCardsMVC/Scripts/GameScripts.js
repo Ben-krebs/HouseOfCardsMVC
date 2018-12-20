@@ -10,38 +10,22 @@ $(function () {
     //        + '</strong>: ' + htmlEncode(message) + '</li>');
     //};
 
-    // Functions
-    hub.client.redirectToUrl = function (url) {
-        window.location.href = url;
-    };
-
-    hub.client.alertOnJoin = function (name) {
-        $('#players').append("<p>" + name + "</p>");
-    };
-
-    hub.client.alertOnLeave = function (name) {
-        $('#players').append("<p>" + name + "</p>");
-    };  
-
     // Start the connection.  
     $.connection.hub.start().done(function () {
         if (typeof (connectionStart) === 'function') {
             connectionStart();
-        }     
+        }
     });
+
+    // Functions
+    hub.client.redirectToUrl = function (url) { 
+        window.location.href = url;
+    };   
+
+    hub.client.alertOnJoin = function (name) {
+        $('#players').append("<p>" + name + "</p>");
+    };  
 });
-
-
-function JoinGameAlert() {
-    hub.server.joinGroup(GlobalGameId, $.connection.hub.id, GlobalPlayerName);
-}
-
-function LeaveGame_Button() {
-    hub.server.leaveGroup(GlobalGameId, $.connection.hub.id, GlobalPlayerName);
-    window.location.href = '/Game/';
-}
-
-
 
 // Home page, used to create a new game
 function CreateGame_Button() {
@@ -59,7 +43,7 @@ function CreateGame_Button() {
         data: { Player_Name: $('#PlayerName_Input').val() },
         success: function () {
             window.location.href = '/Game/';
-        }
+        },
     });
 }
 
@@ -88,7 +72,7 @@ function JoinGame_Button() {
             else {
                 $('#InvalidCode_Div').show();
             }
-        }
+        },
     });
 }
 
@@ -101,24 +85,11 @@ function StartGame_Button() {
         data: {Game_Id: GlobalGameId},
         success: function () {
             hub.server.redirect('/Game/');
-        }
+        },
     });
 }
 
-function SchemeComplete_Button() {
-    $.ajax({
-        url: '/Game/ReadyHandler',
-        type: "POST",
-        datatype: JSON,
-        data: { Game_Id: GlobalGameId, Player_Id: GlobalPlayerId, Phase: 1, Selected_Card_Id: $('#card_id').val(), Selected_Target_Id: $('#target_id').val() },
-        success: function (data) {
-            if (data === 0) {
-                hub.server.redirect('/Game/');
-            }
-            else {
-                $('#Pending-Players-Scheme').show();
-                $('#Pending-Players-Scheme-Count').html(data);
-            }        
-        }
-    });
+function JoinGameAlert() {
+    hub.server.joinGroup(GlobalGameId, $.connection.hub.id, GlobalPlayerName);
 }
+
