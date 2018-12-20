@@ -52,5 +52,14 @@ namespace HouseOfCardsMVC.Controllers
         {
             return PartialView("~/Views/" + Partial + ".cshtml", Data);
         }
+
+        public void SaveSession(string Key, string Val)
+        {
+            if(Val == "NULL")
+            {
+                Val = null;
+            }
+            Session[Key] = Val;
+        }
     }
 }

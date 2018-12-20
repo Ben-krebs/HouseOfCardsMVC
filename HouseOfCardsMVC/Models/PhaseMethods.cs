@@ -201,17 +201,16 @@ namespace HouseOfCardsMVC.Models
                         }
                     }
                     player.Messages.Add(result);
-
-                    if(vote_master_id == player.Id)
-                    {
-                        player.Voting = true;
-                    }
-                    else
-                    {
-                        player.Messages.Add("Anoter player is controlling the vote, discuss as a group and figure out who to accuse of foul play");
-                    }
                 }
 
+                if (vote_master_id == player.Id)
+                {
+                    player.Voting = true;
+                }
+                else
+                {
+                    player.Messages.Add("Anoter player is controlling the vote, discuss as a group and figure out who to accuse of foul play");
+                }
                 Context.Application["Player-" + player.Id] = player;
             }
             Game.Phase = 3;

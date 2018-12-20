@@ -52,10 +52,17 @@ function JoinGameAlert() {
 }
 
 function LeaveGame_Button() {
-    hub.server.leaveGroup(GlobalGameId, $.connection.hub.id, GlobalPlayerName);
-    window.location.href = '/Game/';
+    hub.server.leaveGroup(GlobalGameId, GlobalPlayerId);
+    $.ajax({
+        url: '/Home/SaveSession',
+        type: "POST",
+        datatype: JSON,
+        data: { Key: "Game_Id", val: "NULL" },
+        success: function () {
+            window.location.href = '/Game/';
+        }
+    });
 }
-
 
 // Home page, used to create a new game
 function CreateGame_Button() {
@@ -158,7 +165,7 @@ function PlayCard_Button(id, target) {
 function NoVote_Button() {
 
     $.ajax({
-        url: '/Game/CreateGameHandler',
+        url: '/Game/EndRoundHandler',
         type: "POST",
         datatype: JSON,
         data: { Player_Name: $('#PlayerName_Input').val() },
