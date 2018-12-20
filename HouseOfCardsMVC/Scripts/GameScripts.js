@@ -122,3 +122,39 @@ function SchemeComplete_Button() {
         }
     });
 }
+
+function Load_Game_Partial(partial, div) {
+    $.ajax({
+        url: '/Home/Partial_Game',
+        type: "POST",
+        datatype: JSON,
+        data: { Game_Id: GlobalGameId, Partial: partial },
+        success: function (data) {
+            $(elm).html(data);
+        }
+    });
+}
+
+function Load_Player_Partial(partial, div) {
+    $.ajax({
+        url: '/Home/Partial_Player',
+        type: "POST",
+        datatype: JSON,
+        data: { Partial: partial },
+        success: function (data) {
+            $(elm).html(data);
+        }
+    });
+}
+
+function Load_Card_Partial(partial, div, id) {
+    $.ajax({
+        url: '/Home/Partial_Card',
+        type: "POST",
+        datatype: JSON,
+        data: { Card_Id: id, Partial: partial },
+        success: function (data) {
+            $(elm).html(data);
+        }
+    });
+}

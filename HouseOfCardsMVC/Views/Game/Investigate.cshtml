@@ -22,7 +22,7 @@
         <div class="col-sm-6">
             @{
                 var Card1 = Constants.Cards.GetCard(Model.Card_Ids[0]);
-                <div onclick="SelectCard_Tile('@Card1.Id')">
+                <div onclick="SelectCard_Tile('@Card1.Id', '@Card1.Target')">
                     <h5>@Card1.Name</h5>
                     <p>@Card1.Description</p>
                 </div>
@@ -31,7 +31,7 @@
         <div class="col-sm-6">
             @{
                 var Card2 = Constants.Cards.GetCard(Model.Card_Ids[1]);
-                <div onclick="SelectCard_Tile('@Card2.Id')">
+                <div onclick="SelectCard_Tile('@Card2.Id', '@Card2.Target')">
                     <h5>@Card2.Name</h5>
                     <p>@Card2.Description</p>
                 </div>
@@ -42,7 +42,7 @@
         <div class="col-sm-6">
             @{
                 var Card3 = Constants.Cards.GetCard(Model.Card_Ids[2]);
-                <div onclick="SelectCard_Tile('@Card3.Id')">
+                <div onclick="SelectCard_Tile('@Card3.Id', '@Card3.Target')">
                     <h5>@Card3.Name</h5>
                     <p>@Card3.Description</p>
                 </div>
@@ -51,7 +51,7 @@
         <div class="col-sm-6">
             @{
                 var Card4 = Constants.Cards.GetCard(Model.Card_Ids[3]);
-                <div onclick="SelectCard_Tile('@Card4.Id')">
+                <div onclick="SelectCard_Tile('@Card4.Id', '@Card4.Target')">
                     <h5>@Card4.Name</h5>
                     <p>@Card4.Description</p>
                 </div>
