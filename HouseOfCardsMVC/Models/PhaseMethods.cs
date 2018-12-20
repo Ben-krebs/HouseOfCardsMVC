@@ -124,19 +124,19 @@ namespace HouseOfCardsMVC.Models
                     // Find the action the player has made this round
                     var card = Constants.Cards.GetCard(player.SelectedCard);
                     // Apply the self actions
-                    //player.Defense += card.e;
+                    player.DefenseType += card.SubType;
 
                     if (card.Target == Constants.List_CardTargets.Other)
                     {
                         // Store the pending action against its target
-                        PendingInvestigations.Add(new InvestigationModel { Game_Id = Game.Id, Instigator_Id = player.Id, Target_Id = player.SelectedTarget, Type = card.Type });
+                        PendingInvestigations.Add(new InvestigationModel { Game_Id = Game.Id, Instigator_Id = player.Id, Target_Id = player.SelectedTarget, Type = card.SubType });
                     }
                     else if (card.Target == Constants.List_CardTargets.Global)
                     {
                         // Store the pending action against its targets
                         foreach (var target in players.Where(a => a.Id != player.Id))
                         {
-                            PendingInvestigations.Add(new InvestigationModel { Game_Id = Game.Id, Instigator_Id = player.Id, Target_Id = target.Id, Type = card.Type });
+                            PendingInvestigations.Add(new InvestigationModel { Game_Id = Game.Id, Instigator_Id = player.Id, Target_Id = target.Id, Type = card.SubType });
                         }
                     }
                 }
@@ -157,9 +157,16 @@ namespace HouseOfCardsMVC.Models
                 {
                     var target = players.FirstOrDefault(a => a.Id == investigation.Target_Id);
                     string result = "";
-                    if (target.Defense == investigation.Type)
+                    if (target.DefenseType == investigation.Type)
                     {
-                        result = target.Name + " is clean";
+                        switch (investigation.Type)
+                        {
+                            case "Dirt":
+                                result = target.Name + " is clean";
+                                break;
+                            default:  result = "The investigation returned nothing of note";
+                                break;       
+                        }                        
                     }
                     else
                     {                    
@@ -172,7 +179,24 @@ namespace HouseOfCardsMVC.Models
                                 result = target.Name + " is looking to " + (target.PendingScore >= 0 ? "gain" : "lose") + " points of popularity";
                                 break;
                             case "Target":
-                               // Find out who this player has targeted with their last action
+                                string attackedPlayer = "an unknown player";
+                                if (String.IsNullOrEmpty(target.SelectedTarget))
+                                {
+                                    switch (Constants.Cards.GetCard(player.SelectedCard).Target)
+                                    {
+                                        case "Global": attackedPlayer = "everyone"; break;
+                                        case "Self": attackedPlayer = "themself"; break;
+                                        case "Other": attackedPlayer = "another player"; break;
+                                    }
+                                }
+                                else
+                                {
+                                    attackedPlayer = players.First(a => a.Id == target.SelectedTarget).Name;
+                                }
+                                result = target.Name + " targeted " + attackedPlayer + " this round";
+                                break;
+                            case "History":
+                                result = target.Name + " has made " + target.HistoricDirt + " illegal actions in this game";
                                 break;
                         }
                     }

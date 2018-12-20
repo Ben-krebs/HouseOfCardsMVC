@@ -27,7 +27,7 @@ namespace HouseOfCardsMVC.Models
             Player.PendingScore = 0;
             Player.SelectedCard = null;
             Player.SelectedTarget = null;
-            Player.Defense = null;
+            Player.DefenseType = null;
             Player.Baiting = false;
             Player.Dirt = null;
 
