@@ -62,6 +62,8 @@ namespace HouseOfCardsMVC.Controllers
             HttpContext.Application["Player-" + player.Id] = player;
 
             Session["Game_Id"] = game.Id;
+           // new Hubs.GameHub().JoinGroup(game.Id.ToString());
+
             return game;
         }
 
@@ -86,6 +88,8 @@ namespace HouseOfCardsMVC.Controllers
                 HttpContext.Application["Player-" + player.Id] = player;
 
                 Session["Game_Id"] = game.Id;
+               // new Hubs.GameHub().JoinGroup(game.Id.ToString());
+
                 return true;
             }
             else

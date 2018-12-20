@@ -10,15 +10,19 @@ $(function () {
     //        + '</strong>: ' + htmlEncode(message) + '</li>');
     //};
 
-    // Start the connection.
-    $.connection.hub.start();
+    // Start the connection.  
+    $.connection.hub.start().done(function () {
+        if (typeof (connectionStart) === 'function') {
+            connectionStart();
+        }
+    });
 
     // Functions
-    hub.client.redirect = function (url) { 
+    hub.client.redirectToUrl = function (url) { 
         window.location.href = url;
     };   
 
-    hub.client.AlertJoin = function (name) {
+    hub.client.alertOnJoin = function (name) {
         $('#players').append("<p>" + name + "</p>");
     };  
 });
@@ -86,6 +90,6 @@ function StartGame_Button() {
 }
 
 function JoinGameAlert() {
-    hub.server.AlertJoin(GlobalPlayerName);
+    hub.server.joinGroup(GlobalGameId, $.connection.hub.id, GlobalPlayerName);
 }
 
